@@ -1,0 +1,42 @@
+$maxVW: 1664px;
+$largeVW: 1200px;
+$mediumVW: 992px;
+$mobileVW: 768px;
+$tinyVW: 480px;
+$picoVW: 350px;
+
+@mixin maxVW () {
+    @media screen and (max-width: $maxVW) {
+        @content;
+    }
+}
+
+@mixin largeVW () {
+    @media screen and (max-width: $largeVW) {
+        @content;
+    }
+}
+
+@mixin mediumVW () {
+    @media screen and (max-width: $mediumVW) {
+        @content;
+    }
+}
+
+@mixin mobileVW () {
+    @media screen and (max-width: $mobileVW) {
+        @content;
+    }
+}
+
+@mixin tinyVW () {
+    @media screen and (max-width: $tinyVW) {
+        @content;
+    }
+}
+
+@mixin miniVW () {
+    @media screen and (max-width: $miniVW) {
+        @content;
+    }
+}

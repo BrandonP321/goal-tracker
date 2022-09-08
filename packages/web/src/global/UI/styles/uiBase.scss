@@ -1,0 +1,9 @@
+@import "colors";
+@import "responsive";
+@import "font";
+@import "mixins";
+@import "animations";
+
+// Z-INDEX DEFAULT VALUES
+$zIndexHeader: 1000;
+$zIndexModal: 1010;

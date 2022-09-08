@@ -1,3 +1,5 @@
+@import "../../../UI/styles/uiBase.scss";
+
 .spinner {
 	opacity: 0;
 	width: 5rem;
@@ -7,14 +9,5 @@
 	&.show {
 		opacity: 1;
 		animation: Spin 5s linear infinite;
-	}
-}
-
-@keyframes Spin {
-	from {
-		transform: rotate(0);
-	}
-	to {
-		transform: rotate(360deg);
 	}
 }
