@@ -5,13 +5,12 @@
            "~Navigation/*" : ["./global/Navigation/*"],
            "~Components/*": ["./global/UI/components/*"],
            "~Areas/*": ["./Areas/*"],
-           "~Utils": ["./utils"],
+           "~Utils/*": ["./utils/*"],
            "~UIComponents/*": ["./global/UI/UIComponents/*"],
            "~FeatureComponents/*": ["./global/components/*"],
            "~StoryBlokTypes": ["./Generated/storyblok-types.ts"],
-           "~ReduxSlices/*": ["./global/features/slices/*"],
-           "~ReduxStore": ["./global/features/store.ts"],
-           "~ReduxHooks": ["./global/features/hooks.ts"]
+           "~Store/*": ["./global/features/*"],
+           "~StoreHooks": ["./global/features/hooks.ts"]
          }
     }
 }
