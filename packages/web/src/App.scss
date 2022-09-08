@@ -1,0 +1,11 @@
+html {
+	scroll-behavior: smooth;
+}
+
+html[data-scroll-locked="true"] {
+
+	body {
+		position: fixed;
+		overflow-y: scroll;
+	}
+}

@@ -1,13 +1,13 @@
 import { Responsive } from "~Store/slices/Responsive/Responsive";
 
 export class ReduxUtils {
+	/** Initializes any redux data stores that require initialization */
 	public static initializeStores = () => {
-		console.log("start")
 		Responsive.startDataStoreListeners();
 	}
 
+	/** Destroys any redux stores that required initialization */
 	public static destroyStores = () => {
-		console.log("destroy")
 		Responsive.destoryStoreListeners();
 	}
 }

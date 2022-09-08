@@ -2,7 +2,7 @@ import { AnyAction, EnhancedStore } from "@reduxjs/toolkit";
 import { ThunkMiddleware } from "redux-thunk";
 import { configureStore } from "@reduxjs/toolkit";
 import responsiveReducer from "~Store/slices/Responsive/ResponsiveSlice";
-// import pageLoadingReducer from "./slices/PageLoadingSlice/pageLoadingSlice";
+import pageLoadingReducer from "~Store/slices/PageLoading/PageLoadingSlice";
 
 /* Returns the type of a redux store with a given slice; for anootating type of store parameters in functions/classes */
 export type ReduxStoreWithSlice<SliceState = {}> = EnhancedStore<{
@@ -15,7 +15,7 @@ export const store = configureStore({
 	/* object of slice reducers to be combined */
 	reducer: {
 		responsive: responsiveReducer,
-		// pageLoading: pageLoadingReducer,
+		pageLoading: pageLoadingReducer,
 	}
 })
 

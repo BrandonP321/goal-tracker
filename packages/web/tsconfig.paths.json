@@ -4,7 +4,7 @@
         "paths": {
            "~Navigation/*" : ["./global/Navigation/*"],
            "~Components/*": ["./global/UI/components/*"],
-           "~Areas/*": ["./Areas/*"],
+           "~Pages/*": ["./Pages/*"],
            "~Utils/*": ["./utils/*"],
            "~UIComponents/*": ["./global/UI/UIComponents/*"],
            "~FeatureComponents/*": ["./global/components/*"],

@@ -17,3 +17,5 @@ type TResponsiveHookOverload = {
  * @returns object of booleans for each breakpoint if no breakpoint parameter is specified, otherwise returns a boolean for the specified breakpoint 
  */
 export const useResponsive: TResponsiveHookOverload = (breakpoint?: keyof ResponsiveState): any => useAppSelector(({ responsive: r }) => breakpoint ? r[breakpoint] : r);
+
+export const usePageLoading = () => useAppSelector(state => state.pageLoading.loading);
