@@ -1741,11 +1741,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@goal-tracker/shared@1.0.0, @goal-tracker/shared@workspace:packages/shared":
+  version: 0.0.0-use.local
+  resolution: "@goal-tracker/shared@workspace:packages/shared"
+  languageName: unknown
+  linkType: soft
+
 "@goal-tracker/web@workspace:packages/web":
   version: 0.0.0-use.local
   resolution: "@goal-tracker/web@workspace:packages/web"
   dependencies:
     "@craco/craco": ^6.4.5
+    "@goal-tracker/shared": 1.0.0
     "@reduxjs/toolkit": ^1.8.5
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": ^13.4.0
