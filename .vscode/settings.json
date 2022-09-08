@@ -1,0 +1,29 @@
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/node_modules/": true,
+    },
+    "search.exclude": {
+        "**/node_modules": true,
+    },
+    "editor.linkedEditing": true,
+    "editor.foldingImportsByDefault": true,
+    "editor.minimap.enabled": false,
+    "editor.tabSize": 4,
+    "files.autoSave": "onFocusChange",
+
+    /* eslint */
+    "eslint.packageManager": "yarn",
+    // "eslint.codeActionsOnSave.mode": "all",
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "eslint.enable": true,
+    "eslint.validate": ["javascript", "typescript", "typescriptreact", "javascriptreact"],
+    "editor.insertSpaces": false
+}
