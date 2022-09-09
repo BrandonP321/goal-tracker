@@ -1,7 +1,12 @@
 // BASE COLORS
 
 // SITE
-$bodyBgPrimary: #000;
+$bodyBgPrimary: #17181e;
+$colorDanger: red;
+$colorAccentPrimary: #ffc297;
+$colorAccentSecondary: #ab2ccb;
+$colorAccentTertiary: #f76aab;
 
 // TEXT
 $textPrimary: whitesmoke;
+$textFaded: rgba($textPrimary, 0.7);
