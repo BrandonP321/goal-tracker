@@ -1,5 +1,5 @@
-import Test from "../../loc/en/test.json";
+import Auth from "../../loc/en/Auth.json";
 
 export const AllLoc = {
-	Test
+	Auth
 }

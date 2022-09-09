@@ -1,0 +1,85 @@
+@import "../../global/UI/styles/uiBase.scss";
+
+.auth {
+	min-height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	@include mobileVW() {
+		align-items: flex-start;
+		padding: 8rem 0 4rem 0;
+	}
+}
+
+.formWrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 90%;
+	max-width: 25rem;
+	z-index: 10;
+
+	.title {
+		font-size: 4rem;
+		font-weight: bold;
+		margin-bottom: 5rem;
+		text-align: center;
+
+		@include mobileVW() {
+			margin-bottom: 3rem;
+			font-size: 2.5rem;
+		}
+	}
+
+	.changeFormText {
+		color: $textFaded;
+		margin-top: 1rem;
+
+		strong {
+			color: $textPrimary;
+			cursor: pointer;
+			transition: all 0.25s;
+
+			&:hover {
+				color: $colorAccentTertiary;
+			}
+		}
+	}
+}
+
+.darkBall {
+	@include DarkGradientBall(12rem);
+	top: 5rem;
+	right: 20%;
+	z-index: 2;
+
+	@include largeVW() {
+		right: 10%;
+	}
+
+	@include mobileVW() {
+		@include DarkGradientBall(6rem);
+		top: 2rem;
+		right: 5%;
+	}
+}
+
+.accentBall {
+	@include AccentGradientBall(18rem);
+	left: 20%;
+	top: -5rem;
+	z-index: 1;
+
+	@include largeVW() {
+		left: 10%;
+	}
+
+	@include mobileVW() {
+		@include AccentGradientBall(10rem);
+		left: 0;
+		top: -3rem;
+		transform: translateX(-40%);
+	}
+}

@@ -5,6 +5,7 @@ type TRoute = Omit<PathRouteProps, "element"> & { element: any };
 
 export class RouteDefs {
 	public static routes: TRoute[] = [
+		{ path: "/Auth", element: () => import("~Pages/Auth/Auth") },
 		{ path: "*", element: () => import("~Pages/PageNotFound/PageNotFound") },
 	]
 
@@ -14,6 +15,6 @@ export class RouteDefs {
 
 		const LazyComponent = React.lazy(route.element);
 
-		return <Route {...rest} element={<LazyComponent/>}/>
+		return <Route {...rest} key={i} element={<LazyComponent/>}/>
 	}) }
 }

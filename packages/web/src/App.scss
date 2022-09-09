@@ -6,6 +6,14 @@
 	font-family: $primaryFont;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+    /* Ensures that autofill styles don't get applied while user is still on page */
+    transition: all 99999s 99999s;
+}
+
 html {
 	scroll-behavior: smooth;
 

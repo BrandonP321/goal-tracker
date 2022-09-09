@@ -1,0 +1,19 @@
+@mixin AccentGradientBall($width) {
+	width: $width;
+	height: $width;
+	position: absolute;
+	border-radius: 50%;
+	background: radial-gradient(circle at 70% 15%, #f6aabe, #c940b0);
+	box-shadow: inset #{0.0667 * $width} #{$width * -0.1} #{$width * 0.233} 0 rgba(rgba(171, 44, 203, 0.65), 1), inset #{$width * -0.1} #{$width * 0.0333} #{$width * 0.1667} 0 rgba(#f5b98b, 1);
+}
+
+@mixin DarkGradientBall($width) {
+	width: $width;
+	height: $width;
+	position: absolute;
+	border-radius: 50%;
+	background: radial-gradient(circle at 70% 10%, #323242, #121218);
+	box-shadow: 
+		inset #{0.133 * $width} #{$width / -3} #{$width / 5} 0 rgba(0, 0, 0, 0.4),
+		0 0 2rem 0 rgba($bodyBgPrimary, 0.5);
+}
