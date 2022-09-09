@@ -55,6 +55,7 @@ export const FormTextInputField = (props: FormTextInputFieldProps) => {
 		<div className={classNames(styles.fieldOuterWrapper, classes?.root)}>
 			<div className={classNames(styles.formFieldWrapper, classes?.fieldWrapper, !!value && styles.hasValue, isFocused && styles.focused, !!errMsg && styles.error)}>
 				<input {...rest}
+					id={id}
 					className={classNames(styles.formInput, classes?.input)}
 					type={inputType}
 					autoComplete={autoComplete ? "on" : "off"}
@@ -62,7 +63,7 @@ export const FormTextInputField = (props: FormTextInputFieldProps) => {
 					onFocus={() => setIsFocused(true)}
 					onBlur={() => setIsFocused(false)}
 				/>
-				<p className={classNames(styles.fieldPlaceholder, classes?.placeholder)}>{placeholder}</p>
+				<label htmlFor={id} className={classNames(styles.fieldPlaceholder, classes?.placeholder)}>{placeholder}</label>
 			</div>
 			{errMsg && <p className={classNames(styles.fieldErr, classes?.errMsg)}>{errMsg}</p>}
 		</div>
