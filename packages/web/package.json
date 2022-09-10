@@ -4,6 +4,10 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.4.5",
+    "@fortawesome/fontawesome-pro": "^6.2.0",
+    "@fortawesome/fontawesome-svg-core": "^6.2.0",
+    "@fortawesome/pro-solid-svg-icons": "^6.2.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@goal-tracker/shared": "1.0.0",
     "@reduxjs/toolkit": "^1.8.5",
     "@testing-library/jest-dom": "^5.16.5",

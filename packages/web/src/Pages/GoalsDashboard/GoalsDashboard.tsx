@@ -1,8 +1,12 @@
-import React, { useEffect, useRef } from 'react'
-import { DarkToColorGradientBtn } from '~Components/GradientBtn/GradientBtn';
+import { faArrowTurnDownRight } from '@fortawesome/pro-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import classNames from 'classnames';
+import React, { useEffect, useRef, useState } from 'react'
+import { DarkToColorGradientBtn, GradientBtn } from '~Components/GradientBtn/GradientBtn';
 import { useAppDispatch, useUserGoals } from '~Store/hooks';
-import { moveGoal, setGoals, TGoal } from '~Store/slices/UserGoals/UserGoalsSlice';
-import { throttle } from '~Utils/Helpers';
+import { moveGoal, setGoals } from '~Store/slices/UserGoals/UserGoalsSlice';
+import { GoalUtils, TGoal, TGoalCategory } from '~Utils/GoalUtils';
+import { ClassesProp, throttle } from '~Utils/Helpers';
 import styles from "./GoalsDashboard.module.scss";
 
 const mockGoal: TGoal = {
@@ -13,9 +17,9 @@ const mockGoal: TGoal = {
   id: ""
 }
 
-const mockGoals: TGoal[] = Array(10).fill(mockGoal).map((goal, i) => ({...goal, id: JSON.stringify(i)}));
+const mockGoals: TGoal[] = Array(10).fill(mockGoal).map((goal, i) => ({...goal, id: JSON.stringify(i), title: goal.title + " " + i}));
 const todayMockGoals = mockGoals.slice(0, 4);
-const weekMockGoals = mockGoals.slice(5, mockGoals.length);
+const weekMockGoals: TGoal[] = mockGoals.slice(5, mockGoals.length)?.map(goal => ({ ...goal, category: "week" }));
 
 type GoalsDashboardProps = {}
 
@@ -28,6 +32,7 @@ export default function GoalsDashboard(props: GoalsDashboardProps) {
 }
 
 type GoalBoardProps = {
+
 }
 
 let throttleWait = false;
@@ -112,7 +117,7 @@ const GoalList = (props: GoalListProps) => {
           <GoalCard {...g} key={i} onMouseDown={onCardMouseDown}/>
         ))}
       </div>
-      <DarkToColorGradientBtn>Create New Goal</DarkToColorGradientBtn>
+      <GradientBtn>Create New Goal</GradientBtn>
     </div>
   )
 }
@@ -126,17 +131,64 @@ const GoalCard = (props: GoalCardProps) => {
 
   const dispatch = useAppDispatch();
 
-  const handleCardListChange = () => {
-    dispatch(moveGoal({ currentCategory: "today", goalId: id, newCategory: "week" }))
+  const [moveDropdownOptions, setMoveDropdownOptions] = useState<DropdownMenuProps["options"]>([]);
+  const [showMoveDropdown, setShowMoveDropdown] = useState(false);
+
+  useEffect(() => {
+    const validCategoryMoves = GoalUtils.getValidCategoriesForMove(category);
+
+    setMoveDropdownOptions(validCategoryMoves?.map(cat => ({
+      title: GoalUtils.CategoryNames[cat],
+      onClick: () => {
+        dispatch(moveGoal({ currentCategory: category, goalId: id, newCategory: cat }))
+        setShowMoveDropdown(false);
+      },
+    })))
+
+    const hideDropdown = () => setShowMoveDropdown(false);
+
+    document.addEventListener("click", hideDropdown);
+
+    return () => document.removeEventListener("click", hideDropdown);
+  }, [setShowMoveDropdown, category, id, dispatch])
+
+  const toggleMoveDropdownVisibility = () => {
+    requestAnimationFrame(() => {
+      setShowMoveDropdown(!showMoveDropdown);
+    })
   }
 
   return (
-    <div className={styles.goalCard} onMouseDown={onMouseDown} onClick={handleCardListChange}>
+    <div className={styles.goalCard} onMouseDown={onMouseDown}>
       <div className={styles.toolbar}>
-
+        <div className={styles.toolIconWrapper} onClick={toggleMoveDropdownVisibility}>
+          <FontAwesomeIcon icon={faArrowTurnDownRight} className={styles.toolIcon}/>
+          <DropdownMenu options={moveDropdownOptions} classes={{ root: classNames(styles.goalMoveDropdown, showMoveDropdown && styles.show) }}/>
+        </div>
       </div>
       <p className={styles.cardTitle}>{title}</p>
       <p className={styles.cardBlurb}>{desc}</p>
+    </div>
+  )
+}
+
+export type DropdownMenuProps = {
+  options: {
+    title: string;
+    onClick: (...args: any) => void;
+  }[],
+  classes?: ClassesProp<"root" | "option">
+}
+
+const DropdownMenu = ({ options, classes }: DropdownMenuProps) => {
+  return (
+    <div className={classNames(styles.dropdown, classes?.root)}>
+      {options?.map((o, i) => {
+        return (
+          // <div className={classNames(styles.option, classes?.option)} onClick={o.onClick}>{o.title}</div>
+          <DarkToColorGradientBtn key={i} classes={{ root: classNames(styles.option, classes?.option) }} onClick={o.onClick}>{o.title}</DarkToColorGradientBtn>
+        )
+      })}
     </div>
   )
 }

@@ -1,14 +1,5 @@
-import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
-
-export type TGoalCategory = "today" | "week" | "month" | "unassigned"
-
-export type TGoal = {
-  title: string;
-  desc: string;
-  isComplete: boolean;
-  category: TGoalCategory;
-  id: string;
-}
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { TGoal, TGoalCategory } from "~Utils/GoalUtils";
 
 export type UserGoalsState = {
   goals: null | {[key in TGoalCategory]: TGoal[]};
@@ -48,6 +39,8 @@ const userGoalsSlice = createSlice({
           const goal = listForRemoval?.[goalIndex];
 
           if (goal) {
+            goal.category = action.payload.newCategory;
+
             listForRemoval?.splice(goalIndex, 1);
             listForAddition?.unshift(goal);
           }

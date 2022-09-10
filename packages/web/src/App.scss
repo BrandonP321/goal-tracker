@@ -2,7 +2,6 @@
 
 * {
 	margin: 0;
-	color: $textPrimary;
 	font-family: $primaryFont;
 }
 
@@ -22,6 +21,10 @@ input:-webkit-autofill:active {
     @include ScrollbarTrack();
     
     @include ScrollbarThumb();
+}
+
+html {
+    color: $textPrimary;
 }
 
 html[data-scroll-locked="true"] {
