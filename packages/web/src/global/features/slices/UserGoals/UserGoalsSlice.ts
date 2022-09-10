@@ -49,7 +49,7 @@ const userGoalsSlice = createSlice({
 
           if (goal) {
             listForRemoval?.splice(goalIndex, 1);
-            listForAddition?.push(goal);
+            listForAddition?.unshift(goal);
           }
         }
       }
