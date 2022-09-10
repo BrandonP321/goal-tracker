@@ -14,6 +14,7 @@
 }
 
 .goalList {
+	position: relative;
 	height: 100%;
 	width: 30rem;
 	min-width: 30rem;
@@ -23,9 +24,24 @@
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
-	background-color: rgba(#c6c7ca, 1);
 	user-select: none;
 	transition: box-shadow 0.25s, transform 0.25s;
+
+	> * {
+		position: relative;
+		z-index: 2;
+	}
+
+	&::after {
+		content: "";
+		position: absolute;
+		top: 2rem;
+		left: 0;
+		right: 0;
+		bottom: 2rem;
+		background-color: #c6c7ca;
+		z-index: 1;
+	}
 	
 	&:hover {
 		box-shadow: inset 0 0 0 -1rem rgba(0, 0, 0, 0.5), 0 0 2rem 0 rgba(0, 0, 0, 0.5);
