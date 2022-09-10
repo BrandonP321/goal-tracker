@@ -1,52 +1,52 @@
 import React, { useEffect, useRef } from 'react'
 import { DarkToColorGradientBtn } from '~Components/GradientBtn/GradientBtn';
+import { useAppDispatch, useUserGoals } from '~Store/hooks';
+import { moveGoal, setGoals, TGoal } from '~Store/slices/UserGoals/UserGoalsSlice';
 import { throttle } from '~Utils/Helpers';
 import styles from "./GoalsDashboard.module.scss";
-
-type TGoalCategory = "today" | "week" | "month" | "unassigned"
-
-type TGoal = {
-  title: string;
-  desc: string;
-  isComplete: boolean;
-  category: TGoalCategory;
-}
 
 const mockGoal: TGoal = {
   title: "This is a goal of mine",
   desc: "This is a very cool goal that I don't have a good description for, but this will work for now",
   isComplete: false,
-  category: "today"
+  category: "today",
+  id: ""
 }
 
-const mockGoals = Array(10).fill(mockGoal);
+const mockGoals: TGoal[] = Array(10).fill(mockGoal).map((goal, i) => ({...goal, id: JSON.stringify(i)}));
+const todayMockGoals = mockGoals.slice(0, 4);
+const weekMockGoals = mockGoals.slice(5, mockGoals.length);
 
 type GoalsDashboardProps = {}
 
 export default function GoalsDashboard(props: GoalsDashboardProps) {
   return (
     <div className={styles.dash}>
-      <GoalBoard todayGoals={mockGoals} weekGoals={[]} monthGoals={[]} unassignedGoals={[]} />
+      <GoalBoard/>
     </div>
   )
 }
 
 type GoalBoardProps = {
-  todayGoals: TGoal[];
-  weekGoals: TGoal[];
-  monthGoals: TGoal[];
-  unassignedGoals: TGoal[];
 }
 
 let throttleWait = false;
 const setThrottleWait = (value: boolean) => throttleWait = value;
 
 const GoalBoard = (props: GoalBoardProps) => {
-  const { monthGoals, todayGoals, unassignedGoals, weekGoals } = props;
+  const dispatch = useAppDispatch();
+
+  const { errorUpdatingGoal, goals, haveGoalsLoaded } = useUserGoals();
+
+  const {} = props;
 
   const isMouseDownRef = useRef(false);
   const lastMousePos = useRef<number | null>(null);
   const boardRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    dispatch(setGoals({ month: [], week: weekMockGoals, today: todayMockGoals, unassigned: [] }))
+  }, [])
 
   const handleMouseDrag: React.MouseEventHandler<HTMLDivElement> = (e) => {
     if (!isMouseDownRef.current || lastMousePos.current === null || !boardRef.current) {
@@ -75,6 +75,10 @@ const GoalBoard = (props: GoalBoardProps) => {
     lastMousePos.current = e.nativeEvent.x;
   }
 
+  if (!goals) {
+    return null;
+  }
+
   return (
     <div 
       ref={boardRef}
@@ -83,10 +87,10 @@ const GoalBoard = (props: GoalBoardProps) => {
       onMouseUp={resetDragSettings}
       onMouseMove={(e) => throttle(() => handleMouseDrag(e), 1000 / 90, throttleWait, setThrottleWait)}
     >
-      <GoalList goals={todayGoals} title={"Today's Goals"} onCardClick={resetDragSettings}/>
-      <GoalList goals={weekGoals} title={"Today's Goals"} onCardClick={resetDragSettings} />
-      <GoalList goals={monthGoals} title={"Today's Goals"} onCardClick={resetDragSettings} />
-      <GoalList goals={unassignedGoals} title={"Today's Goals"} onCardClick={resetDragSettings} />
+      <GoalList goals={goals.today} title={"Today's Goals"} onCardMouseDown={resetDragSettings}/>
+      <GoalList goals={goals.week} title={"Week's Goals"} onCardMouseDown={resetDragSettings} />
+      <GoalList goals={goals.month} title={"Month's Goals"} onCardMouseDown={resetDragSettings} />
+      <GoalList goals={goals.unassigned} title={"Unassigned Goals"} onCardMouseDown={resetDragSettings} />
     </div>
   )
 }
@@ -94,18 +98,18 @@ const GoalBoard = (props: GoalBoardProps) => {
 type GoalListProps = {
   goals: TGoal[];
   title: string;
-  onCardClick: () => void;
+  onCardMouseDown: () => void;
 }
 
 const GoalList = (props: GoalListProps) => {
-  const { goals, title, onCardClick } = props;
+  const { goals, title, onCardMouseDown } = props;
 
   return (
     <div className={styles.goalList}>
       <p className={styles.listTitle}>{title}</p>
       <div className={styles.listGoals}>
         {goals?.map((g, i) => (
-          <GoalCard {...g} key={i} onClick={onCardClick}/>
+          <GoalCard {...g} key={i} onMouseDown={onCardMouseDown}/>
         ))}
       </div>
       <DarkToColorGradientBtn>Create New Goal</DarkToColorGradientBtn>
@@ -114,14 +118,20 @@ const GoalList = (props: GoalListProps) => {
 }
 
 type GoalCardProps = TGoal & {
-  onClick: () => void;
+  onMouseDown: () => void;
 }
 
 const GoalCard = (props: GoalCardProps) => {
-  const { title, desc, category, isComplete, onClick } = props;
+  const { title, desc, category, isComplete, onMouseDown, id } = props;
+
+  const dispatch = useAppDispatch();
+
+  const handleCardListChange = () => {
+    dispatch(moveGoal({ currentCategory: "today", goalId: id, newCategory: "week" }))
+  }
 
   return (
-    <div className={styles.goalCard} onMouseDown={onClick}>
+    <div className={styles.goalCard} onMouseDown={onMouseDown} onClick={handleCardListChange}>
       <div className={styles.toolbar}>
 
       </div>
