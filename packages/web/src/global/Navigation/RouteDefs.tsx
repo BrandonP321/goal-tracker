@@ -6,6 +6,7 @@ type TRoute = Omit<PathRouteProps, "element"> & { element: any };
 export class RouteDefs {
 	public static routes: TRoute[] = [
 		{ path: "/Auth", element: () => import("~Pages/Auth/Auth") },
+		{ path: "/Dashboard", element: () => import("~Pages/GoalsDashboard/GoalsDashboard") },
 		{ path: "*", element: () => import("~Pages/PageNotFound/PageNotFound") },
 	]
 

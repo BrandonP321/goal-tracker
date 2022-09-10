@@ -6,7 +6,13 @@ $colorDanger: red;
 $colorAccentPrimary: #ffc297;
 $colorAccentSecondary: #ab2ccb;
 $colorAccentTertiary: #f76aab;
+$colorScrollbar: #5d5362;
 
 // TEXT
 $textPrimary: whitesmoke;
 $textFaded: rgba($textPrimary, 0.7);
+$textDark: $bodyBgPrimary;
+
+// GRADIENTS
+$gradientBgColored: linear-gradient(to bottom left, $colorAccentPrimary, $colorAccentTertiary, $colorAccentSecondary);
+$gradientBgDark: linear-gradient(to top right, #121218, #323242);

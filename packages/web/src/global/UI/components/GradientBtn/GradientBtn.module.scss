@@ -1,15 +1,15 @@
 @import "../../styles/uiBase.scss";
 
-$gradientBg: linear-gradient(to bottom left, $colorAccentPrimary, $colorAccentTertiary, $colorAccentSecondary);
+$btnTransitionDuration: 0.25s;
 
 .gradientBtn,
 .darkToColorBtn {
-	background: $gradientBg;
+	background: $gradientBgColored;
 	width: 100%;
 	text-align: center;
 	padding: 1.25rem 1.5rem;
 	border-radius: 0.75rem;
-	transition: all 0.25s;
+	transition: all $btnTransitionDuration;
 	font-weight: bold;
 
 	&:hover {
@@ -20,12 +20,14 @@ $gradientBg: linear-gradient(to bottom left, $colorAccentPrimary, $colorAccentTe
 
 .darkToColorBtn {
 	position: relative;
+	background: transparent;
 
 	p {
 		position: relative;
 		z-index: 3;
 	}
 
+	&::before,
 	&::after {
 		content: "";
 		position: absolute;
@@ -33,14 +35,30 @@ $gradientBg: linear-gradient(to bottom left, $colorAccentPrimary, $colorAccentTe
 		left: 0;
 		right: 0;
 		bottom: 0;
-		border-radius: 0.65rem;
-		background: linear-gradient(to top right, #121218, #323242);
+		border-radius: inherit;
+	}
+
+	&::before {
+		background: $gradientBgColored;
+		z-index: 1;
+		opacity: 0;
+		transition: opacity 0s;
+		transition-delay: $btnTransitionDuration;
+	}
+
+	&::after {
+		background: $gradientBgDark;
 		z-index: 2;
-		transition: opacity 0.25s;
+		transition: opacity $btnTransitionDuration;
 	}
 
 	&:hover {
 		transform: none;
+
+		&::before {
+			opacity: 1;
+			transition-delay: 0s;
+		}
 	
 		&::after {
 			opacity: 0;

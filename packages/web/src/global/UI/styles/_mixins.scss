@@ -17,3 +17,30 @@
 		inset #{0.133 * $width} #{$width / -3} #{$width / 5} 0 rgba(0, 0, 0, 0.4),
 		0 0 2rem 0 rgba($bodyBgPrimary, 0.5);
 }
+
+@mixin ScrollbarWidth($width) {
+
+	&::-webkit-scrollbar {
+        width: $width;
+    }
+}
+
+@mixin ScrollbarThumb($bgColor: rgba($colorScrollbar, 0.7), $bgColorHover: $colorScrollbar, $borderRadius: 1rem) {
+
+	&::-webkit-scrollbar-thumb {
+        background-color: $bgColor;
+        transition: all .2s;
+        border-radius: 1rem;
+        
+        &:hover {
+            background-color: $bgColorHover;
+        }
+    }
+}
+
+@mixin ScrollbarTrack($bgColor: $bodyBgPrimary) {
+
+	&::-webkit-scrollbar-track {
+        background-color: $bgColor;
+    }
+}
