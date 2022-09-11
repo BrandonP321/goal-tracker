@@ -1,0 +1,45 @@
+@import "../../styles/uiBase.scss";
+
+.creationModal {
+
+	.modalContent {
+		max-width: 50rem;
+		padding: 1rem;
+		border-radius: 1rem;
+		box-shadow: 0 0 2rem 0 rgba(0, 0, 0, 0.75);
+		background-color: $bodyBgPrimary;
+	}
+
+	.modalTitle {
+		font-size: 3rem;
+		font-weight: bold;
+		margin-bottom: 1rem;
+		text-align: center;
+
+		@include mobileVW() {
+			margin: 0.5rem 0 1.5rem 0;
+			font-size: 2rem;
+		}
+	}
+
+	form {
+
+		.formBtns {
+			margin-top: 2rem;
+		}
+
+		.submitBtn,
+		.cancelBtn {
+			max-width: 15rem;
+			width: 50%;
+		}
+
+		.submitBtn {
+			margin-right: 1rem;
+		}
+
+		.cancelBtn {
+
+		}
+	}
+}

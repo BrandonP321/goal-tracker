@@ -40,3 +40,15 @@ $picoVW: 350px;
         @content;
     }
 }
+
+@mixin touchDevice() {
+    @media (hover: none) {
+        @content;
+    }
+}
+
+@mixin nonTouchDevice() {
+    @media (hover: hover) {
+        @content;
+    }
+}

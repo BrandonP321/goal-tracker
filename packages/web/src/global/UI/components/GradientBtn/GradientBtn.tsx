@@ -23,3 +23,11 @@ export const DarkToColorGradientBtn = (props: GradientBtnProps) => {
 		<GradientBtn {...rest} classes={{ root: classNames(styles.darkToColorBtn, classes?.root) }}><p>{children}</p></GradientBtn>
 	)
 }
+
+export const DangerGradientBtn = (props: GradientBtnProps) => {
+	const { classes, children, ...rest } = props;
+
+	return (
+		<GradientBtn {...rest} classes={{ root: classNames(styles.dangerBtn, classes?.root) }}><p>{children}</p></GradientBtn>
+	)
+}

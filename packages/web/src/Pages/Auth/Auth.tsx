@@ -46,7 +46,7 @@ const AuthForm = (props: AuthFormProps) => {
 	return (
 		<form className={styles.formWrapper} autoComplete="on">
 			<h1 className={styles.title}>{title}</h1>
-			<FormFields fields={fields} onSubmit={() => null} />
+			<FormFields fields={fields} />
 			<GradientBtn>{title}</GradientBtn>
 			<p className={styles.changeFormText}>{changeFormText} <strong onClick={switchForm}>{changeFormLinkText}</strong></p>
 		</form>

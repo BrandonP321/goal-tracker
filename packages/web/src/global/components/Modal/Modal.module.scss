@@ -1,0 +1,49 @@
+@import "../../UI/styles/uiBase.scss";
+
+.modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	pointer-events: none;
+	opacity: 0;
+	z-index: $zIndexModal;
+	transition: all 0.25s;
+
+	&.show {
+		pointer-events: all;
+		opacity: 1;
+
+		.overlay {
+
+		}
+	}
+
+	> *:not(:first-child) {
+		position: relative;
+		z-index: 2;
+		width: 90%;
+		max-height: calc(100% - 4rem);
+
+	}
+}
+
+.contentWrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.overlay {
+	background-color: rgba(0, 0, 0, 0.75);
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 1;
+}

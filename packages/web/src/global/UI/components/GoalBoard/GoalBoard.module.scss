@@ -1,0 +1,77 @@
+@import "../../styles/uiBase.scss";
+
+.board {
+	width: 100%;
+	display: flex;
+	overflow: auto;
+	padding: 1rem 2rem;
+	scroll-behavior: auto;
+}
+
+.goalList {
+	position: relative;
+	height: 100%;
+	width: 30rem;
+	min-width: 30rem;
+	border-radius: 1rem;
+	box-shadow: inset 0 0 2rem 0 rgba(0, 0, 0, 0.5), 0 0 0 -1rem rgba(0, 0, 0, 0.5);
+	margin-right: 5rem;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	user-select: none;
+	transition: box-shadow 0.25s, transform 0.25s;
+
+	> *:not(.creationModal) {
+		position: relative;
+		z-index: 2;
+	}
+
+	&::after {
+		content: "";
+		position: absolute;
+		top: 2rem;
+		left: 0;
+		right: 0;
+		bottom: 2rem;
+		background-color: #c6c7ca;
+		z-index: 1;
+	}
+	
+	&:hover {
+		@include nonTouchDevice() {
+			box-shadow: inset 0 0 0 -1rem rgba(0, 0, 0, 0.5), 0 0 2rem 0 rgba(0, 0, 0, 0.5);
+			transform: translateY(-0.25rem);
+		}
+
+		.listGoals {
+			@include nonTouchDevice() {
+				@include ScrollbarThumb();
+			}
+		}
+	}
+
+	.listTitle {
+		position: relative;
+		font-size: 2rem;
+		font-weight: bold;
+		text-align: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 1rem;
+		background: $gradientBgDark;
+		box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 1);
+	}
+
+	.listGoals {
+		@include nonTouchDevice() {
+			@include ScrollbarTrack(transparent);
+			@include ScrollbarThumb(transparent);
+			@include ScrollbarWidth(0.5rem);
+		}
+		height: 100%;
+		padding: 1rem;
+		overflow-y: auto;
+	}
+}

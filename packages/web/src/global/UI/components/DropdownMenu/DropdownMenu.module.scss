@@ -1,0 +1,12 @@
+@import "../../styles/uiBase.scss";
+
+.dropdown {
+	overflow: hidden;
+	border-radius: 0.75rem;
+	width: 10rem;
+
+	.option {
+		padding: 1rem;
+		border-radius: 0;
+	}
+}

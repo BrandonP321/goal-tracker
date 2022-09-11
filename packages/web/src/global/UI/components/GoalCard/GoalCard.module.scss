@@ -1,0 +1,92 @@
+@import "../../styles/uiBase.scss";
+
+.goalCard {
+	border-radius: 0.5rem;
+	border: 2px solid rgba(#000, 0.2);
+	padding: 1rem;
+	cursor: pointer;
+	transition: all 0.25s;
+	background-color: rgba(#ebecf0, 1);
+
+	&:not(:last-child) {
+		margin-bottom: 1rem;
+	}
+
+	&:hover {
+		background-color: rgba(#ebecf0, 0.5);
+	}
+}
+
+$toolIconWidth: 2rem;
+
+.toolbar {
+
+	.toolIconWrapper {
+		position: relative;
+		width: $toolIconWidth;
+		height: $toolIconWidth;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border-radius: 50%;
+		transition: all 0.25s;
+
+		&::before {
+			content: "";
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			border-radius: inherit;
+			background: $gradientBgColored;
+			opacity: 0;
+			transform: scale(0.8);
+			transition: all 0.15s;
+		}
+
+		&:hover {
+
+			&::before {
+				transform: scale(1);
+				opacity: 1;
+			}
+
+			.toolIcon {
+				color: rgba($textDark, 1);
+			}
+		}
+	}
+
+	.toolIcon {
+		position: relative;
+		color: rgba($textDark, 0.8);
+		font-size: 1rem;
+		transition: all 0.25s;
+	}
+}
+
+.cardTitle {
+	font-size: 1.6rem;
+	font-weight: bold;
+	color: $textDark;
+}
+
+.cardBlurb {
+	color: rgba($textDark, 0.8);
+}
+
+.goalMoveDropdown {
+	position: absolute;
+	top: 0;
+	left: 130%;
+	opacity: 0;
+	box-shadow: 0 0 1rem rgba(0, 0, 0, 0.75);
+	pointer-events: none;
+	transition: all 0.25s;
+
+	&.show {
+		opacity: 1;
+		pointer-events: all;
+	}
+}

@@ -6,7 +6,10 @@ export class WindowUtils {
 
 		document.body.style.top = `-${scrollTop}px`
 
-		htmlEle?.setAttribute("data-scroll-locked", "true");
+		const isBodyOverflowing = document.body.clientHeight > window.innerHeight;
+
+		// lock scroll only if body is overflowing window
+		isBodyOverflowing && htmlEle?.setAttribute("data-scroll-locked", "true");
 		/* Save scroll top value in data attr of <html> */
 		htmlEle?.setAttribute("data-scroll-top", `${scrollTop}`)
 	}

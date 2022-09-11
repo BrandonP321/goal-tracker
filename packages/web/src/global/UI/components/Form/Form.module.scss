@@ -2,6 +2,8 @@
 
 $fieldPaddingHorizontal: 1rem;
 $fieldPaddingVertical: 1rem;
+$inputBorderWidth: 2px;
+$inputBorderColor: rgba(#fff, 0.2);
 
 .fieldOuterWrapper {
 	margin-bottom: 1rem;
@@ -30,7 +32,8 @@ $fieldPaddingVertical: 1rem;
 	}
 
 	.fieldPlaceholder {
-		top: 0;
+		top: $inputBorderWidth;
+		transform: translateY(-50%);
 		font-size: 0.8rem;
 	}
 }
@@ -38,21 +41,25 @@ $fieldPaddingVertical: 1rem;
 .formInput {
 	padding: $fieldPaddingVertical $fieldPaddingHorizontal;
 	font-size: inherit;
-	border: 2px solid rgba(#ffffff, 0.2);
+	border: $inputBorderWidth solid $inputBorderColor;
 	border-radius: inherit;
 	width: 100%;
 	transition: all 0.25s;
-
+	
 	&:focus {
 		outline: none;
 	}
 }
 
+.textarea {
+	resize: none;
+	height: 8rem;
+}
+
 .fieldPlaceholder {
 	position: absolute;
-	top: 50%;
-	left: $fieldPaddingVertical;
-	transform: translateY(-50%);
+	top: calc(#{$fieldPaddingVertical} + #{$inputBorderWidth});
+	left: $fieldPaddingHorizontal;
 	font-size: inherit;
 	pointer-events: none;
 	transition: all 0.25s;
@@ -64,4 +71,71 @@ $fieldPaddingVertical: 1rem;
 	color: $colorDanger;
 	padding: 0 0.5rem;
 	margin-top: 0.25rem;
+}
+
+.radiosWrapper {
+	display: flex;
+	justify-content: space-between;
+	max-width: 30rem;
+	margin: 0 auto;
+}
+
+.radioOption {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin: 0 1rem 1rem 1rem;
+
+	input {
+		position: relative;
+		appearance: none;
+		background-color: transparent;
+		margin: 0;
+		width: 1.5rem;
+		height: 1.5rem;
+		border-radius: 0.25rem;
+		border: 2px solid $inputBorderColor;
+		cursor: pointer;
+		transition: all 0.25s;
+
+		&:hover,
+		&:focus {
+			border-color: $colorAccentSecondary;
+		}
+
+		&::after {
+			content: "";
+			position: absolute;
+			top: #{$inputBorderWidth * -1};
+			left: #{$inputBorderWidth * -1};
+			right: #{$inputBorderWidth * -1};
+			bottom: #{$inputBorderWidth * -1};
+			background: $gradientBgColored;
+			opacity: 0;
+			border-radius: inherit;
+			transition: all 0.25s;
+		}
+
+		&:checked::after {
+			opacity: 1;
+		}
+	}
+}
+
+.radioTitle {
+	color: $textFaded;
+	margin-top: 0.25rem;
+}
+
+.radioSectionWrapper {
+
+}
+
+.radiosTitle {
+	font-size: 1.5rem;
+	font-weight: bold;
+	text-align: center;
+	margin: 2rem auto 1rem auto;
+	color: $textFaded;
 }

@@ -18,7 +18,8 @@ $btnTransitionDuration: 0.25s;
 	}
 }
 
-.darkToColorBtn {
+.darkToColorBtn,
+.dangerBtn {
 	position: relative;
 	background: transparent;
 
@@ -63,5 +64,27 @@ $btnTransitionDuration: 0.25s;
 		&::after {
 			opacity: 0;
 		}
+	}
+}
+
+.darkToColorBtn {
+
+	&::before {
+		background: $gradientBgColored;
+	}
+
+	&::after {
+		background: $gradientBgDark;
+	}
+}
+
+.dangerBtn {
+
+	&::before {
+		background: $gradientBgDanger;
+	}
+
+	&::after {
+		background: $gradientBgDark;
 	}
 }

@@ -16,11 +16,15 @@ input:-webkit-autofill:active {
 * {
 	scroll-behavior: smooth;
 
-	@include ScrollbarWidth(1rem);
-    
-    @include ScrollbarTrack();
-    
-    @include ScrollbarThumb();
+	// set custom scroll styles for devices that have a cursor
+	@include nonTouchDevice() {
+		@include ScrollbarWidth(1rem);
+		
+		@include ScrollbarTrack();
+		
+		@include ScrollbarThumb();
+	}
+
 }
 
 html {
