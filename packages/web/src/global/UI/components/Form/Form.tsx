@@ -4,11 +4,12 @@ import { ClassesProp } from "~Utils/Helpers";
 import styles from "./Form.module.scss";
 
 type FormProps = {
-	fields: TValidFormField[]
+	fields: TValidFormField[];
+	errors: {[key: string]: string};
 }
 
 export const FormFields = (props: FormProps) => {
-	const { fields } = props;
+	const { fields, errors } = props;
 
 	return (
 		<>
@@ -16,7 +17,7 @@ export const FormFields = (props: FormProps) => {
 				const FieldEle = defaultFormFields[f.type] as any;
 
 				return !!FieldEle && (
-					<FieldEle {...f} key={i} />
+					<FieldEle {...f} key={i} errMsg={errors?.[f.id] || undefined}/>
 				)
 			})}
 		</>
@@ -25,18 +26,18 @@ export const FormFields = (props: FormProps) => {
 
 type TFormFieldTypes = "Input" | "Textarea" | "Radio"
 
-type FormField<T extends TFormFieldTypes> = {
+type FormField<T extends TFormFieldTypes, TValidFieldId extends string = string> = {
 	type: T;
-	id: string;
+	id: TValidFieldId;
+	name: TValidFieldId;
 	errMsg?: string | null;
 }
 
-export type TValidFormField = FormTextInputFieldProps | FormTextareaProps | RadioFormFieldProps;
+export type TValidFormField<TValidFieldId extends string = string> = FormTextInputFieldProps<TValidFieldId> | FormTextareaProps | RadioFormFieldProps;
 
-export type FormTextInputFieldProps = FormField<"Input"> & {
+export type FormTextInputFieldProps<TValidFieldId extends string = string> = FormField<"Input", TValidFieldId> & {
 	placeholder: string;
 	inputType?: "text" | "email" | "password" | "tel" | "url";
-	name: "name" | "email" | "username" | "current-password" | "new-password" | "url" | string;
 	required?: boolean;
 	autoComplete?: boolean;
 	classes?: ClassesProp<"root" | "fieldWrapper" | "input" | "placeholder" | "errMsg">
@@ -103,6 +104,7 @@ type FormFieldWrapperProps = {
 }
 
 const FormFieldWrapper = ({ placeholder, children, classes, inputHasValue, inputId, errMsg, isFocused }: FormFieldWrapperProps) => {
+
 	return (
 		<div className={classNames(styles.fieldOuterWrapper, classes?.root)}>
 			<div className={classNames(styles.formFieldWrapper, classes?.fieldWrapper, inputHasValue && styles.hasValue, isFocused && styles.focused, !!errMsg && styles.error)}>
@@ -118,7 +120,6 @@ type RadioFormFieldProps = FormField<"Radio"> & {
 	title: string;
 	defaultValue?: string;
 	options: { title: string; id: string; value: string }[];
-	name: string;
 }
 
 const RadioFormField = (props: RadioFormFieldProps) => {

@@ -1,10 +1,10 @@
+import { TGoal, TGoalCategory } from "@goal-tracker/shared/src/utils/GoalUtils";
 import { useEffect, useRef, useState } from "react";
 import { GoalCard } from "~Components/GoalCard/GoalCard";
 import { GoalCreationModal } from "~Components/GoalCreationModal/GoalCreationModal";
 import { GradientBtn } from "~Components/GradientBtn/GradientBtn";
 import { useAppDispatch, useUserGoals } from "~Store/hooks";
 import { setGoals } from "~Store/slices/UserGoals/UserGoalsSlice";
-import { TGoal, TGoalCategory } from "~Utils/GoalUtils";
 import { throttle } from "~Utils/Helpers";
 import styles from "./GoalBoard.module.scss";
 

@@ -1,5 +1,5 @@
+import { TGoalCategory, TGoal } from "@goal-tracker/shared/src/utils/GoalUtils";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TGoal, TGoalCategory } from "~Utils/GoalUtils";
 
 export type UserGoalsState = {
   goals: null | {[key in TGoalCategory]: TGoal[]};

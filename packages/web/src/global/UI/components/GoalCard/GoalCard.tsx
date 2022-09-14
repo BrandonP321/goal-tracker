@@ -5,8 +5,8 @@ import { useState, useEffect } from "react";
 import { DropdownMenu, DropdownMenuProps } from "~Components/DropdownMenu/DropdownMenu";
 import { useAppDispatch } from "~Store/hooks";
 import { moveGoal } from "~Store/slices/UserGoals/UserGoalsSlice";
-import { GoalUtils, TGoal } from "~Utils/GoalUtils";
 import styles from "./GoalCard.module.scss";
+import { GoalUtils, TGoal } from "@goal-tracker/shared/src/utils/GoalUtils";
 
 type GoalCardProps = TGoal & {
 	onMouseDown: () => void;
