@@ -1,0 +1,35 @@
+import { ResponseJSON, TDefaultModelProps, TMongooseDoc, TMongooseModel, TMongooseSchema } from ".";
+import { TGoal, TGoalCategory } from "../../utils/GoalUtils";
+
+export namespace UserModel {
+	export type User = TDefaultModelProps & {
+		email: string;
+		password: string;
+		username: string;
+		jwtHash: {[key: string]: boolean};
+		goals: {[key in TGoalCategory]: TGoal[]}
+	}
+	
+	export type Document = TMongooseDoc<User, InstanceMethods>;
+	export type Schema = TMongooseSchema<User, InstanceMethods, StaticMethods>;
+	export type Model = TMongooseModel<User, InstanceMethods, Schema>
+	
+	export type InstanceMethods = {
+		toShallowJSON: () => Promise<ShallowJSON>;
+		toFullJSON: () => Promise<FullJSON>;
+		validatePassword: (password: string) => Promise<boolean>;
+	}
+	
+	export type StaticMethods = {
+		
+	}
+	
+	/** User JSON with all data */
+	export type FullJSON = ResponseJSON<WithoutSensitiveData<User>>;
+	/** User JSON with only essential data for auth */
+	export type ShallowJSON = ResponseJSON<Pick<FullJSON, "email" | "username" | "id">>
+
+	export type SensitiveFields = "password" | "jwtHash";
+	/** Removes sensitive data from user JSON */
+	export type WithoutSensitiveData<T extends {}> = Omit<T, SensitiveFields>;
+}
