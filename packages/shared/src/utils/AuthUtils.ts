@@ -29,14 +29,18 @@ export class AuthUtils {
 		{ fieldId: "passwordReEnter", required: true, tests: [{ test: (v, fields) => (v === fields.password ?? "" === v), errMsg: Loc.Auth.PasswordsDoNotMatch }] },
 	]
 
-	/**
-	 * Validates all registrations fields user has filled out.  Will only return a max 
-	 * of one error per field, even if there are multiple tests that fail for that field
-	 */
-	public static ValidateRegistrationFields = (fields: TFilledAuthFields<TRegistrationFieldId>) => {
-		const errors: TAuthFieldErrors<TRegistrationFieldId> = {}
+	public static LoginFields: TAuthField<TLoginFieldId>[] = [
+		{ fieldId: "email", required: true, tests: [] },
+		{ fieldId: "password", required: true, tests: [] },
+	]
 
-		for (const fieldValidation of this.RegistrationFields) {
+	/**
+	 * Validates all auth fields user has filled out.
+	 */
+	public static ValidateAuthFields = <TValidFieldId extends string>(fields: TFilledAuthFields<TValidFieldId>, validationFields: TAuthField<TValidFieldId>[]) => {
+		const errors: TAuthFieldErrors<TValidFieldId> = {}
+
+		for (const fieldValidation of validationFields) {
 
 			const fieldValue = fields[fieldValidation.fieldId];
 
@@ -57,6 +61,14 @@ export class AuthUtils {
 
 		/* Return error obj, which will be empty if no validation errors were found */
 		return errors;
+	}
+
+	public static ValidateRegistrationFields = (fields: TFilledAuthFields<TRegistrationFieldId>) => {
+		return this.ValidateAuthFields(fields, this.RegistrationFields);
+	}
+
+	public static ValidateLoginFields = (fields: TFilledAuthFields<TLoginFieldId>) => {
+		return this.ValidateAuthFields(fields, this.LoginFields);
 	}
 
 	private static isRequiredFieldValid = (value: string) => {

@@ -5,8 +5,8 @@ import { useState } from 'react';
 import { FormFields, TValidFormField } from '~Components/Form/Form';
 import { GradientBtn } from '~Components/GradientBtn/GradientBtn';
 import { AuthUtils, TAuthFieldErrors, TFilledAuthFields, TLoginFieldId, TRegistrationFieldId } from "@goal-tracker/shared/src/utils/AuthUtils";
-import { RegisterUserRequest } from "@goal-tracker/shared/src/api/Requests/Auth/Auth.requests";
-import { AuthRegistrationReqErrorCodes } from '@goal-tracker/shared/src/api/Requests/Auth/AuthRequestErrors';
+import { LoginUserRequest, RegisterUserRequest } from "@goal-tracker/shared/src/api/Requests/Auth/Auth.requests";
+import { AuthLoginReqErrorCodes, AuthRegistrationReqErrorCodes } from '@goal-tracker/shared/src/api/Requests/Auth/AuthRequestErrors';
 import { APIFetcher } from '~Utils/APIFetcher';
 
 type AuthProps = {}
@@ -34,7 +34,10 @@ export default function Auth(props: AuthProps) {
 	)
 }
 
-type AuthFormSubmissionHandler<T extends TRegistrationFieldId | TLoginFieldId> = (formData: TFilledAuthFields<T>, setErrors: (errors: TAuthFieldErrors<T>) => void) => void;
+type AuthFormSubmissionHandler<T extends TRegistrationFieldId | TLoginFieldId> = (
+	formData: TFilledAuthFields<T>, 
+	setErrors: (errors: { fieldErrors: TAuthFieldErrors<T>, formError?: string}
+) => void) => void;
 
 type AuthFormProps = {
 	title: string;
@@ -51,18 +54,18 @@ const AuthForm = (props: AuthFormProps) => {
 		fields, title, changeFormText, changeFormLinkText, switchForm, onSubmit, validateFields
 	} = props;
 
-	const [validationErrors, setValidationErrors] = useState<TAuthFieldErrors<TRegistrationFieldId | TLoginFieldId>>({});
+	const [validationErrors, setValidationErrors] = useState<{ fieldErrors: TAuthFieldErrors<TRegistrationFieldId | TLoginFieldId>, formError?: string }>({ fieldErrors: {} });
 
 	const handleFormSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
 		e.preventDefault();
 		// remove all currently displayed errors
-		setValidationErrors({});
+		setValidationErrors({ fieldErrors: {} });
 
 		const formData = AuthUtils.getAuthFormData<TRegistrationFieldId | TLoginFieldId>(e.currentTarget);
 
 		const fieldErrors = validateFields(formData);
 
-		setValidationErrors(fieldErrors);
+		setValidationErrors({ fieldErrors });
 
 		if (Object.keys(fieldErrors).length === 0) {
 			// if no validation errors were found, submit data
@@ -73,7 +76,10 @@ const AuthForm = (props: AuthFormProps) => {
 	return (
 		<form className={styles.formWrapper} onSubmit={handleFormSubmit} autoComplete="on" noValidate>
 			<h1 className={styles.title}>{title}</h1>
-			<FormFields fields={fields} errors={validationErrors}/>
+			<FormFields fields={fields} errors={validationErrors.fieldErrors}/>
+			{validationErrors.formError &&
+				<p className={styles.formError}>{validationErrors.formError}</p>
+			}
 			<GradientBtn>{title}</GradientBtn>
 			<p className={styles.changeFormText}>{changeFormText} <strong onClick={switchForm}>{changeFormLinkText}</strong></p>
 		</form>
@@ -97,12 +103,27 @@ type FormProps = {
 }
 
 const LoginForm = (props: FormProps) => {
-	const handleSubmit = () => {
+	const handleSubmit: AuthFormSubmissionHandler<TLoginFieldId> = (formData, setErrors) => {
+		APIFetcher.Loginuser(formData).then(({ data }) => {
+			console.log(data)
+		}).catch(({response}: LoginUserRequest.ErrResponse) => {
+			const err = response?.data;
 
+			switch (err?.errCode) {
+				case AuthLoginReqErrorCodes.InvalidFieldInput:
+					const invalidInputErr = err as LoginUserRequest.Errors["InvalidFieldInput"];
+					setErrors({ fieldErrors: invalidInputErr.invalidFields })
+					break;
+				case AuthLoginReqErrorCodes.IncorrectEmailOrPassword:
+					setErrors({ fieldErrors: {}, formError: Loc.Auth.IncorrectEmailOrPassword })
+					break;
+				default:
+			}
+		})
 	}
 
-	const validateFields: any = (formData: TFilledAuthFields<TLoginFieldId>) => {
-		return {}
+	const validateFields = (formData: TFilledAuthFields<TLoginFieldId>) => {
+		return AuthUtils.ValidateLoginFields(formData);
 	}
 
 	return (
@@ -116,16 +137,17 @@ const RegisterForm = (props: FormProps) => {
 			console.log(data);
 		}).catch(({ response }: RegisterUserRequest.ErrResponse) => {
 			const err = response?.data;
-			console.log(err);
+
 			switch (err?.errCode) {
 				case AuthRegistrationReqErrorCodes.EmailOrUsernameTaken:
 					const credTakenErr = err as RegisterUserRequest.Errors["EmailOrUsernameTaken"];
-					setErrors({ 
-						[credTakenErr.credentialTaken]: credTakenErr.credentialTaken === "email" ? Loc.Auth.EmailTaken : Loc.Auth.UsernameTaken })
+					setErrors({ fieldErrors: {
+						[credTakenErr.credentialTaken]: credTakenErr.credentialTaken === "email" ? Loc.Auth.EmailTaken : Loc.Auth.UsernameTaken 
+					}})
 					break;
 				case AuthRegistrationReqErrorCodes.InvalidFieldInput:
 					const invalidFieldErr = err as RegisterUserRequest.Errors["InvalidFieldInput"]
-					setErrors(invalidFieldErr.invalidFields);
+					setErrors({ fieldErrors: invalidFieldErr.invalidFields });
 					break;
 				default:
 					

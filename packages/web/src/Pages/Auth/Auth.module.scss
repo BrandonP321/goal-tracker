@@ -49,6 +49,13 @@
 	}
 }
 
+.formError {
+	width: 100%;
+	color: $colorDanger;
+	padding: 0 0.5rem;
+	margin-bottom: 0.5rem;
+}
+
 .darkBall {
 	@include DarkGradientBall(12rem);
 	top: 5rem;

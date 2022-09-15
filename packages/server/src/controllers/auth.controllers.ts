@@ -1,5 +1,5 @@
 import { UserModel } from "@goal-tracker/shared/src/api/models/User.model";
-import { RegisterUserRequest, ReqUserRegisterErrors } from "@goal-tracker/shared/src/api/Requests/Auth";
+import { LoginUserRequest, RegisterUserRequest, ReqUserLoginErrors, ReqUserRegisterErrors } from "@goal-tracker/shared/src/api/Requests/Auth";
 import { AuthUtils } from "@goal-tracker/shared/src/utils/AuthUtils";
 import { JWTUtils } from "~Utils/JWTUtils";
 import { TRouteController } from ".";
@@ -40,14 +40,43 @@ export const RegisterUserController: TRouteController<RegisterUserRequest.TReque
 			return ControllerUtils.respondWithUnexpectedErr(res, "Unable to create new user");
 		}
 
-		/** JSON web tokens */
-		const tokens = JWTUtils.generateTokens(user.id, newTokenHash);
+		const { tokens } = await JWTUtils.generateAndStoreTokens(user.id, res, newTokenHash);
 
 		if (!tokens) {
 			return ControllerUtils.respondWithUnexpectedErr(res, "Unable to generate auth tokens to create new user")
 		}
 
-		JWTUtils.generateTokenCookies(tokens, res);
+		const userJSON = await user.toShallowJSON();
+
+		return res.json(userJSON).end();
+	})
+}
+
+export const LoginUserController: TRouteController<LoginUserRequest.TRequest, {}> = async (req, res) => {
+	const inputValidationErrors = AuthUtils.ValidateLoginFields(req.body);
+
+	if (Object.keys(inputValidationErrors).length > 0) {
+		return ControllerUtils.respondWithErr(ReqUserLoginErrors.InvalidFieldInput({ invalidFields: inputValidationErrors }), res);
+	}
+
+	db.User.findOne({ email: req.body.email }, async (err: CallbackError, user: UserModel.Document) => {
+		if (err || !user) {
+			return ControllerUtils.respondWithErr(ReqUserLoginErrors.IncorrectEmailOrPassword({}), res);
+		}
+
+		const isValidPassword = await user.validatePassword(req.body.password);
+
+		if (!isValidPassword) {
+			return ControllerUtils.respondWithErr(ReqUserLoginErrors.IncorrectEmailOrPassword({}), res);
+		}
+
+		const { tokenHashId, tokens } = await JWTUtils.generateAndStoreTokens(user.id, res);
+
+		if (!tokens) {
+			return ControllerUtils.respondWithUnexpectedErr(res, "Unable to generate auth tokens to login")
+		}
+
+		await user.addJWTHash(tokenHashId);
 
 		const userJSON = await user.toShallowJSON();
 

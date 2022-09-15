@@ -36,6 +36,18 @@ export class JWTUtils {
 		}
 	}
 
+	/** Generates auth tokens and stores them in secured http cookies */
+	public static generateAndStoreTokens = async (userId: string, res: Response, tokenHash?: string) => {
+		const newTokenHash = tokenHash ?? await this.generateHash();
+		const authTokens = this.generateTokens(userId, newTokenHash);
+
+		if (authTokens) {
+			this.generateTokenCookies(authTokens, res);
+		}
+
+		return { tokens: authTokens, tokenHashId: newTokenHash };
+	}
+
 	public static getSignedAccessToken = (userId: string, tokenIdHash: string) => {
 		return this.signToken(userId, ENVUtils.Vars.ACCESS_TOKEN_SECRET, tokenIdHash, ENVUtils.Vars.ACCESS_TOKEN_EXPIRES_IN)
 	}

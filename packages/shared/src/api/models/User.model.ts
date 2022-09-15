@@ -18,6 +18,8 @@ export namespace UserModel {
 		toShallowJSON: () => Promise<ShallowJSON>;
 		toFullJSON: () => Promise<FullJSON>;
 		validatePassword: (password: string) => Promise<boolean>;
+		/** Adds new token hash to user's list of token hashes used to validate refresh tokens */
+		addJWTHash: (hash: string) => Promise<void>;
 	}
 	
 	export type StaticMethods = {

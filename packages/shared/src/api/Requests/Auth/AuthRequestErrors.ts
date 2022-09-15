@@ -1,5 +1,5 @@
 import { DefaultReqErrors, getReqErrWithDefaults } from "..";
-import { TAuthFieldErrors, TRegistrationFieldId } from "../../../utils/AuthUtils";
+import { TAuthFieldErrors, TLoginFieldId, TRegistrationFieldId } from "../../../utils/AuthUtils";
 import { HttpStatusCode } from "../HttpStatusCodes";
 
 export const AuthRegistrationReqErrorCodes = {
@@ -15,4 +15,17 @@ export const ReqUserRegisterErrors = {
 	[AuthRegistrationReqErrorCodes.EmailOrUsernameTaken]: (params: {
 		credentialTaken: Extract<TRegistrationFieldId, "email" | "username">
 	}) => getReqErrWithDefaults({ status: HttpStatusCode.Unauthorized, errCode: AuthRegistrationReqErrorCodes.EmailOrUsernameTaken }, params)
+} as const;
+
+export const AuthLoginReqErrorCodes = {
+	InvalidFieldInput: "InvalidFieldInput",
+	IncorrectEmailOrPassword: "IncorrectEmailOrPassword",
+} as const;
+
+export const ReqUserLoginErrors = {
+	...DefaultReqErrors,
+	[AuthLoginReqErrorCodes.InvalidFieldInput]: (params: {
+		invalidFields: TAuthFieldErrors<TLoginFieldId>
+	}) => getReqErrWithDefaults({ status: HttpStatusCode.BadRequest, errCode: AuthLoginReqErrorCodes.InvalidFieldInput }, params),
+	[AuthLoginReqErrorCodes.IncorrectEmailOrPassword]: (params: {}) => getReqErrWithDefaults({ status: HttpStatusCode.Unauthorized, errCode: AuthLoginReqErrorCodes.IncorrectEmailOrPassword }, params)
 } as const;
