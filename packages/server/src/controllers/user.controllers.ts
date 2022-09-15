@@ -4,23 +4,12 @@ import { JWTResLocals } from "~Utils/JWTUtils";
 import { TRouteController } from ".";
 import { ControllerUtils } from "~Utils/ControllerUtils";
 import db from "~Models";
+import { TUserDocLocals } from "~Middleware/GetUser.middleware";
 
-export const GetFullUserController: TRouteController<GetFullUserRequest.TRequest, JWTResLocals> = async (req, res) => {
-	const user = await db.User.findById(res.locals.user?.id);
-
-	if (user) {
-		return res.json(await user.toFullJSON()).end();
-	} else {
-		return ControllerUtils.respondWithErr(GetFullUserErrors.UserNotFound({}), res);
-	}
+export const GetFullUserController: TRouteController<GetFullUserRequest.TRequest, TUserDocLocals> = async (req, res) => {
+	return res.json(await res.locals.user.toFullJSON()).end();
 }
 
-export const GetUserGoalsController: TRouteController<GetUserGoalsRequest.TRequest, JWTResLocals> = async (req, res) => {
-	const userGoals = (await db.User.findById(res.locals.user?.id))?.goals;
-
-	if (userGoals) {
-		return res.json(userGoals).end();
-	} else {
-		return ControllerUtils.respondWithErr(GetUserGoalsErrors.UserNotFound({}), res);
-	}
+export const GetUserGoalsController: TRouteController<GetUserGoalsRequest.TRequest, TUserDocLocals> = async (req, res) => {
+	return res.json(res.locals.user.goals).end();
 }

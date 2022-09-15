@@ -37,7 +37,7 @@ export const AuthJwt: TRouteController<TAPIRequest<{}, {}, {}>, JWTResLocals> = 
 		}
 	
 		// make user's id accessible to other controllers
-		res.locals = { user: { id: aToken.userId } }
+		res.locals = { userId: aToken.userId }
 
 		next();
 	} catch (err) {

@@ -48,3 +48,11 @@ export const DefaultReqErrors = {
 	[DefaultRequestErrorCodes.UnexpectedCondition]: (params: { errMsg?: string }) => getReqErrWithDefaults({ status: HttpStatusCode.InternalServerError, errCode: DefaultRequestErrorCodes.UnexpectedCondition }, params),
 	[DefaultRequestErrorCodes.UserMustReAuth]: (params: { errMsg?: string }) => getReqErrWithDefaults({ status: HttpStatusCode.Unauthorized, errCode: DefaultRequestErrorCodes.UserMustReAuth }, params),
 } as const;
+
+export const UserRequestErrorCodes = {
+	UserNotFound: "UserNotFound",
+} as const;
+
+export const UserRequestErrors = {
+	[UserRequestErrorCodes.UserNotFound]: (params: {}) => getReqErrWithDefaults({ status: HttpStatusCode.NotFound, errCode: UserRequestErrorCodes.UserNotFound }, params),
+} as const;

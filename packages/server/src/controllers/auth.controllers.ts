@@ -1,5 +1,5 @@
 import { UserModel } from "@goal-tracker/shared/src/api/models/User.model";
-import { LoginUserRequest, RegisterUserRequest, ReqUserLoginErrors, ReqUserRegisterErrors } from "@goal-tracker/shared/src/api/Requests/Auth";
+import { LoginUserRequest, RegisterUserRequest, ReqUserLoginErrors, ReqUserRegisterErrors, SignoutUserRequest } from "@goal-tracker/shared/src/api/Requests/Auth";
 import { AuthUtils } from "@goal-tracker/shared/src/utils/AuthUtils";
 import { JWTUtils } from "~Utils/JWTUtils";
 import { TRouteController } from ".";
@@ -7,6 +7,7 @@ import { ControllerUtils } from "~Utils/ControllerUtils";
 import { CallbackError } from "mongoose";
 import { TUserDocSaveErr } from "~Models/User/userHelpers";
 import db from "~Models";
+import { TUserDocLocals } from "~Middleware/GetUser.middleware";
 
 export const RegisterUserController: TRouteController<RegisterUserRequest.TRequest, {}> = async (req, res) => {
 	const inputValidationErrors = AuthUtils.ValidateRegistrationFields(req.body);
@@ -82,4 +83,21 @@ export const LoginUserController: TRouteController<LoginUserRequest.TRequest, {}
 
 		return res.json(userJSON).end();
 	})
+}
+
+/** Signs user out of all devices by invalidating all refresh tokens */
+export const SignoutUserController: TRouteController<SignoutUserRequest.TRequest, TUserDocLocals> = async (req, res) => {
+	try {
+		const user = res.locals.user;
+	
+		user.jwtHash = {};
+		await user.save();
+
+		JWTUtils.destroyTokenCookie(res);
+
+		res.json({}).end();
+	} catch (err) {
+		// if error occurred still send error code to client, but it is safe to still consider the user logged out at this point
+		return ControllerUtils.respondWithUnexpectedErr(res);
+	}
 }

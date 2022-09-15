@@ -5,9 +5,7 @@ import jwt from "jsonwebtoken";
 import { ENVUtils } from "./ENVUtils";
 
 export type JWTResLocals = {
-	user: {
-		id: string;
-	}
+	userId: string;
 }
 
 type TAuthTokens = {
@@ -36,6 +34,10 @@ export class JWTUtils {
 		const cookie: undefined | TAuthTokens = JSON.parse(req.cookies?.[authTokenCookieName]);
 
 		return cookie;
+	}
+
+	public static destroyTokenCookie = (res: Response) => {
+		res.clearCookie(authTokenCookieName);
 	}
 
 	/** Returns access & refresh tokens */
