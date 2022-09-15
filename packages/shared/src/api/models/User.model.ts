@@ -20,10 +20,11 @@ export namespace UserModel {
 		validatePassword: (password: string) => Promise<boolean>;
 		/** Adds new token hash to user's list of token hashes used to validate refresh tokens */
 		addJWTHash: (hash: string) => Promise<void>;
+		removeJWTHash: (hash: string) => Promise<void>;
 	}
 	
 	export type StaticMethods = {
-		
+
 	}
 	
 	/** User JSON with all data */

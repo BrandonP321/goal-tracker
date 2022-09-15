@@ -1,13 +1,21 @@
 import { UserModel } from "@goal-tracker/shared/src/api/models/User.model";
 import bcrypt from "bcrypt";
-import { Response } from "express";
+import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { ENVUtils } from "./ENVUtils";
+
+export type JWTResLocals = {
+	user: {
+		id: string;
+	}
+}
 
 type TAuthTokens = {
 	aToken: string;
 	rToken: string;
 }
+
+const authTokenCookieName = "authTokens";
 
 export class JWTUtils {
 	/** Returns random hash */
@@ -18,10 +26,16 @@ export class JWTUtils {
 
 	/** Stores access & refresh tokens in http secured cookies */
 	public static generateTokenCookies = (tokens: TAuthTokens, res: Response) => {
-		res.cookie("authTokens", JSON.stringify(tokens), {
+		res.cookie(authTokenCookieName, JSON.stringify(tokens), {
 			secure: ENVUtils.isLiveEnv,
 			httpOnly: true
 		})
+	}
+
+	public static getTokensFromCookie = (req: Request) => {
+		const cookie: undefined | TAuthTokens = JSON.parse(req.cookies?.[authTokenCookieName]);
+
+		return cookie;
 	}
 
 	/** Returns access & refresh tokens */
@@ -56,10 +70,43 @@ export class JWTUtils {
 		return this.signToken(userId, ENVUtils.Vars.REFRESH_TOKEN_SECRET, tokenIdHash, ENVUtils.Vars.REFRESH_TOKEN_EXPIRES_IN)
 	}
 
-
 	public static signToken = (userId: string, secret: string, tokenIdHash: string, expiresIn?: string) => {
 		return jwt.sign({}, secret, {
 			subject: userId, jwtid: tokenIdHash, expiresIn
 		})
+	}
+
+	public static verifyAccessToken = (token: string) => {
+		return this.verifyToken(token, ENVUtils.Vars.ACCESS_TOKEN_SECRET);
+	}
+
+	public static verifyRefreshToken = (token: string) => {
+		return this.verifyToken(token, ENVUtils.Vars.REFRESH_TOKEN_SECRET);
+	}
+
+	public static verifyToken = (token: string, secret: string) => {
+		const decodedToken = jwt.decode(token);
+
+		let isExpired = false;
+
+		try {
+			// verify that token is still valid & not expired
+			jwt.verify(token, secret);
+		} catch (err) {
+			// if error is thrown while verifying jwt, token is expired
+			isExpired = true;
+		}
+
+		// if either the token couldn't be verified or sub/jti payload properties are undefined, return undefined
+		if (typeof decodedToken === "string" || !decodedToken || !decodedToken.sub || !decodedToken.jti) {
+			return undefined;
+		}
+
+		return {
+			token: decodedToken,
+			isExpired,
+			userId: decodedToken.sub,
+			jwtHash: decodedToken.jti
+		}
 	}
 }

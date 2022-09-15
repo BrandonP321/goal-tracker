@@ -36,12 +36,21 @@ const removeSensitiveData = function(user: UserModel.User): UserModel.WithoutSen
 
 const addJWTHash: UserModel.InstanceMethods["addJWTHash"] = async function(this: UserModel.Document, hash) {
 	this.jwtHash = {...(this.jwtHash ?? {}), [hash]: true}
-	this.save();
+	await this.save();
 } 
+
+const removeJWTHash: UserModel.InstanceMethods["removeJWTHash"] = async function(this: UserModel.Document, hash) {
+	const newJwtHashObj = {...this.jwtHash};
+	delete newJwtHashObj[hash];
+
+	this.jwtHash = newJwtHashObj;
+	await this.save();
+}
 
 export const UserMethods: UserModel.InstanceMethods = {
 	toFullJSON,
 	toShallowJSON,
 	validatePassword,
-	addJWTHash
+	addJWTHash,
+	removeJWTHash
 }

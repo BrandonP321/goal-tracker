@@ -2,7 +2,7 @@ import mongoose, { Document, Model, Schema } from "mongoose";
 
 export type TDefaultModelProps = {
 	id: string;
-	_id: string;
+	_id: mongoose.Types.ObjectId;
 	createdAt: string;
 	updatedAt: string;
 }

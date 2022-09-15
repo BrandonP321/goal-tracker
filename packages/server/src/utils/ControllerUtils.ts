@@ -11,4 +11,9 @@ export class ControllerUtils {
 	public static respondWithUnexpectedErr(res: Response, errMsg?: string) {
 		this.respondWithErr(DefaultReqErrors.UnexpectedCondition({ errMsg }), res);
 	}
+
+	/** Tells client that user needs to re-auth */
+	public static respondWithUserReAuthErr(res: Response, errMsg?: string) {
+		this.respondWithErr(DefaultReqErrors.UserMustReAuth({ errMsg }), res);
+	}
 }

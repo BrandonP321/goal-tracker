@@ -40,9 +40,11 @@ export type TRequestErrorFunc = typeof getReqErrWithDefaults;
 
 export const DefaultRequestErrorCodes = {
 	UnexpectedCondition: "UnexpectedCondition",
+	UserMustReAuth: "UserMustReAuth",
 } as const;
 
 export const DefaultReqErrors = {
 	/** 500 Internal server error with optional error message */
 	[DefaultRequestErrorCodes.UnexpectedCondition]: (params: { errMsg?: string }) => getReqErrWithDefaults({ status: HttpStatusCode.InternalServerError, errCode: DefaultRequestErrorCodes.UnexpectedCondition }, params),
+	[DefaultRequestErrorCodes.UserMustReAuth]: (params: { errMsg?: string }) => getReqErrWithDefaults({ status: HttpStatusCode.Unauthorized, errCode: DefaultRequestErrorCodes.UserMustReAuth }, params),
 } as const;
