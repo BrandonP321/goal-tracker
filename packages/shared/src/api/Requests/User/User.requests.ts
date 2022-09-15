@@ -13,3 +13,14 @@ export namespace GetFullUserRequest {
 	export type ErrResponse = TRequestErrResponse<typeof GetFullUserErrors>;
 	export type Errors = TRequestErrors<typeof GetFullUserErrors>;
 }
+
+export namespace GetUserGoalsRequest {
+	export type TUrlParams = TRouteUrlParams<"", "">;
+	export type TReqBody = {};
+	export type TResBody = UserModel.User["goals"];
+
+	export type TRequest = TAPIRequest<TUrlParams, TReqBody, TResBody>;
+
+	export type ErrResponse = TRequestErrResponse<typeof GetFullUserErrors>;
+	export type Errors = TRequestErrors<typeof GetFullUserErrors>;
+}
