@@ -4,10 +4,11 @@ import { Loc } from "@goal-tracker/shared/src/utils/LocalizationUtils";
 import { useState } from 'react';
 import { FormFields, TValidFormField } from '~Components/Form/Form';
 import { GradientBtn } from '~Components/GradientBtn/GradientBtn';
-import { AuthUtils, TAuthFieldErrors, TFilledAuthFields, TLoginFieldId, TRegistrationFieldId } from "@goal-tracker/shared/src/utils/AuthUtils";
+import { AuthUtils, TLoginFieldId, TRegistrationFieldId } from "@goal-tracker/shared/src/utils/AuthUtils";
 import { LoginUserRequest, RegisterUserRequest } from "@goal-tracker/shared/src/api/Requests/Auth/Auth.requests";
 import { AuthLoginReqErrorCodes, AuthRegistrationReqErrorCodes } from '@goal-tracker/shared/src/api/Requests/Auth/AuthRequestErrors';
 import { APIFetcher } from '~Utils/APIFetcher';
+import { FormUtils, TFilledFormFields, TFormFieldErrors } from '@goal-tracker/shared/src/utils/FormUtils';
 
 type AuthProps = {}
 
@@ -35,8 +36,8 @@ export default function Auth(props: AuthProps) {
 }
 
 type AuthFormSubmissionHandler<T extends TRegistrationFieldId | TLoginFieldId> = (
-	formData: TFilledAuthFields<T>, 
-	setErrors: (errors: { fieldErrors: TAuthFieldErrors<T>, formError?: string}
+	formData: TFilledFormFields<T>, 
+	setErrors: (errors: { fieldErrors: TFormFieldErrors<T>, formError?: string}
 ) => void) => void;
 
 type AuthFormProps = {
@@ -46,7 +47,7 @@ type AuthFormProps = {
 	changeFormLinkText: string;
 	switchForm: () => void;
 	onSubmit: AuthFormSubmissionHandler<TRegistrationFieldId | TLoginFieldId>;
-	validateFields: (formData: TFilledAuthFields<TRegistrationFieldId | TLoginFieldId>) => TAuthFieldErrors<any>;
+	validateFields: (formData: TFilledFormFields<TRegistrationFieldId | TLoginFieldId>) => TFormFieldErrors<any>;
 }
 
 const AuthForm = (props: AuthFormProps) => {
@@ -54,14 +55,14 @@ const AuthForm = (props: AuthFormProps) => {
 		fields, title, changeFormText, changeFormLinkText, switchForm, onSubmit, validateFields
 	} = props;
 
-	const [validationErrors, setValidationErrors] = useState<{ fieldErrors: TAuthFieldErrors<TRegistrationFieldId | TLoginFieldId>, formError?: string }>({ fieldErrors: {} });
+	const [validationErrors, setValidationErrors] = useState<{ fieldErrors: TFormFieldErrors<TRegistrationFieldId | TLoginFieldId>, formError?: string }>({ fieldErrors: {} });
 
 	const handleFormSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
 		e.preventDefault();
 		// remove all currently displayed errors
 		setValidationErrors({ fieldErrors: {} });
 
-		const formData = AuthUtils.getAuthFormData<TRegistrationFieldId | TLoginFieldId>(e.currentTarget);
+		const formData = FormUtils.getFormData<TRegistrationFieldId | TLoginFieldId>(e.currentTarget);
 
 		const fieldErrors = validateFields(formData);
 
@@ -122,7 +123,7 @@ const LoginForm = (props: FormProps) => {
 		})
 	}
 
-	const validateFields = (formData: TFilledAuthFields<TLoginFieldId>) => {
+	const validateFields = (formData: TFilledFormFields<TLoginFieldId>) => {
 		return AuthUtils.ValidateLoginFields(formData);
 	}
 
@@ -155,7 +156,7 @@ const RegisterForm = (props: FormProps) => {
 		})
 	}
 
-	const validateFields = (formData: TFilledAuthFields<TRegistrationFieldId>) => {
+	const validateFields = (formData: TFilledFormFields<TRegistrationFieldId>) => {
 		return AuthUtils.ValidateRegistrationFields(formData);
 	}
 
