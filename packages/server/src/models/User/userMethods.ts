@@ -53,10 +53,10 @@ const addGoal: UserModel.InstanceMethods["addGoal"] = async function(this: UserM
 		this.goals = {
 			...(this.goals ?? {}),
 			[goal.category]: [
-				...(this.goals[goal.category]),
+				...(this.goals[goal.category] ?? []),
 				goal
 			]
-		}
+		} as UserModel.User["goals"]
 		await this.save();
 
 		return goal;
