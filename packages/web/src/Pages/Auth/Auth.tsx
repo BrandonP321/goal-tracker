@@ -2,7 +2,7 @@ import React from 'react'
 import styles from "./Auth.module.scss";
 import { Loc } from "@goal-tracker/shared/src/utils/LocalizationUtils";
 import { useState } from 'react';
-import { FormFields, TValidFormField } from '~Components/Form/Form';
+import { Form, FormFields, FormProps, FormSubmissionHandler, TValidFormField, useFormValidationErrors } from '~Components/Form/Form';
 import { GradientBtn } from '~Components/GradientBtn/GradientBtn';
 import { AuthUtils, TLoginFieldId, TRegistrationFieldId } from "@goal-tracker/shared/src/utils/AuthUtils";
 import { LoginUserRequest, RegisterUserRequest } from "@goal-tracker/shared/src/api/Requests/Auth/Auth.requests";
@@ -35,47 +35,23 @@ export default function Auth(props: AuthProps) {
 	)
 }
 
-type AuthFormSubmissionHandler<T extends TRegistrationFieldId | TLoginFieldId> = (
-	formData: TFilledFormFields<T>, 
-	setErrors: (errors: { fieldErrors: TFormFieldErrors<T>, formError?: string}
-) => void) => void;
-
-type AuthFormProps = {
+type AuthFormProps = Pick<FormProps, "onSubmit" | "validateFields"> & {
 	title: string;
 	fields: TValidFormField[];
 	changeFormText: string;
 	changeFormLinkText: string;
 	switchForm: () => void;
-	onSubmit: AuthFormSubmissionHandler<TRegistrationFieldId | TLoginFieldId>;
-	validateFields: (formData: TFilledFormFields<TRegistrationFieldId | TLoginFieldId>) => TFormFieldErrors<any>;
 }
 
 const AuthForm = (props: AuthFormProps) => {
 	const {
-		fields, title, changeFormText, changeFormLinkText, switchForm, onSubmit, validateFields
+		fields, title, changeFormText, changeFormLinkText, switchForm, ...rest
 	} = props;
 
-	const [validationErrors, setValidationErrors] = useState<{ fieldErrors: TFormFieldErrors<TRegistrationFieldId | TLoginFieldId>, formError?: string }>({ fieldErrors: {} });
-
-	const handleFormSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
-		e.preventDefault();
-		// remove all currently displayed errors
-		setValidationErrors({ fieldErrors: {} });
-
-		const formData = FormUtils.getFormData<TRegistrationFieldId | TLoginFieldId>(e.currentTarget);
-
-		const fieldErrors = validateFields(formData);
-
-		setValidationErrors({ fieldErrors });
-
-		if (Object.keys(fieldErrors).length === 0) {
-			// if no validation errors were found, submit data
-			onSubmit && onSubmit(formData, setValidationErrors);
-		}
-	}
+	const [validationErrors, setValidationErrors] = useFormValidationErrors();
 
 	return (
-		<form className={styles.formWrapper} onSubmit={handleFormSubmit} autoComplete="on" noValidate>
+		<Form {...rest} setValidationErrors={setValidationErrors} classes={{ root: styles.formWrapper }}>
 			<h1 className={styles.title}>{title}</h1>
 			<FormFields fields={fields} errors={validationErrors.fieldErrors}/>
 			{validationErrors.formError &&
@@ -83,7 +59,7 @@ const AuthForm = (props: AuthFormProps) => {
 			}
 			<GradientBtn>{title}</GradientBtn>
 			<p className={styles.changeFormText}>{changeFormText} <strong onClick={switchForm}>{changeFormLinkText}</strong></p>
-		</form>
+		</Form>
 	)
 }
 
@@ -99,12 +75,12 @@ const registerFields: TValidFormField<TRegistrationFieldId>[] = [
 	{ type: "Input", id: "passwordReEnter", name: "passwordReEnter", placeholder: Loc.Auth.ReEnterPassword, classes: {}, autoComplete: false, inputType: "password", errMsg: null },
 ];
 
-type FormProps = {
+type TFormProps = {
 	toggleForm: () => void;
 }
 
-const LoginForm = (props: FormProps) => {
-	const handleSubmit: AuthFormSubmissionHandler<TLoginFieldId> = (formData, setErrors) => {
+const LoginForm = (props: TFormProps) => {
+	const handleSubmit: FormSubmissionHandler<TLoginFieldId> = (formData, setErrors) => {
 		APIFetcher.Loginuser(formData).then(({ data }) => {
 			console.log(data)
 		}).catch(({response}: LoginUserRequest.ErrResponse) => {
@@ -128,12 +104,20 @@ const LoginForm = (props: FormProps) => {
 	}
 
 	return (
-		<AuthForm title={Loc.Auth.SignIn} fields={loginFields} changeFormText={Loc.Auth.NoAccount} changeFormLinkText={Loc.Auth.Register} switchForm={props.toggleForm} onSubmit={handleSubmit} validateFields={validateFields}/>
+		<AuthForm 
+			title={Loc.Auth.SignIn}
+			fields={loginFields}
+			changeFormText={Loc.Auth.NoAccount}
+			changeFormLinkText={Loc.Auth.Register}
+			switchForm={props.toggleForm}
+			onSubmit={handleSubmit} 
+			validateFields={validateFields}
+		/>
 	)
 }
 
-const RegisterForm = (props: FormProps) => {
-	const handleSubmit: AuthFormSubmissionHandler<TRegistrationFieldId> = (formData, setErrors) => {
+const RegisterForm = (props: TFormProps) => {
+	const handleSubmit: FormSubmissionHandler<TRegistrationFieldId> = (formData, setErrors) => {
 		APIFetcher.RegisterUser(formData).then(({ data }) => {
 			console.log(data);
 		}).catch(({ response }: RegisterUserRequest.ErrResponse) => {

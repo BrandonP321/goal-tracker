@@ -1,14 +1,61 @@
+import { FormUtils, TFilledFormFields, TFormFieldErrors } from "@goal-tracker/shared/src/utils/FormUtils";
 import classNames from "classnames";
 import { useState } from "react";
 import { ClassesProp } from "~Utils/Helpers";
 import styles from "./Form.module.scss";
 
-type FormProps = {
-	fields: TValidFormField[];
-	errors: {[key: string]: string};
+export type FormSubmissionHandler<T extends string = string> = (
+	formData: TFilledFormFields<T>,
+	setErrors: (errors: { fieldErrors: TFormFieldErrors<T>, formError?: string}
+) => void) => void;
+
+export const useFormValidationErrors = <T extends string>() => {
+	return useState<{ fieldErrors: TFormFieldErrors<T>, formError?: string }>({ fieldErrors: {} });
 }
 
-export const FormFields = (props: FormProps) => {
+export type FormProps = {
+	onSubmit: FormSubmissionHandler<string>;
+	validateFields: (formData: TFilledFormFields<string>) => TFormFieldErrors<string>;
+	setValidationErrors: ReturnType<typeof useFormValidationErrors>[1];
+	children?: React.ReactNode;
+	classes?: ClassesProp<"root">;
+}
+
+export const Form = (props: FormProps) => {
+	const {
+		onSubmit, validateFields, setValidationErrors, children, classes
+	} = props;
+
+	const handleFormSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+		e.preventDefault();
+		// remove all currently displayed errors
+		setValidationErrors({ fieldErrors: {} });
+
+		const formData = FormUtils.getFormData(e.currentTarget);
+
+		const fieldErrors = validateFields(formData);
+
+		setValidationErrors({ fieldErrors });
+
+		if (Object.keys(fieldErrors).length === 0) {
+			// if no validation errors were found, submit data
+			onSubmit && onSubmit(formData, setValidationErrors);
+		}
+	}
+
+	return (
+		<form className={classes?.root} onSubmit={handleFormSubmit} autoComplete="on" noValidate>
+			{children}
+		</form>
+	)
+}
+
+type FormFieldsProps = {
+	fields: TValidFormField[];
+	errors: TFormFieldErrors<string>;
+}
+
+export const FormFields = (props: FormFieldsProps) => {
 	const { fields, errors } = props;
 
 	return (

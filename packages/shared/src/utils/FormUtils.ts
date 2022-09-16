@@ -52,7 +52,7 @@ export class FormUtils {
 	}
 
 		/** Converts submitted form data into an object with the data for each inputed field */
-		public static getFormData = <TValidFieldId extends string>(formEle: HTMLFormElement) => {
+		public static getFormData = <TValidFieldId extends string = string>(formEle: HTMLFormElement) => {
 			const formData = new FormData(formEle)
 	
 			const fieldData: Partial<TFilledFormFields<TValidFieldId>> = {}
