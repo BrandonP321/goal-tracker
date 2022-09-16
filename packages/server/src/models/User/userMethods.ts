@@ -1,4 +1,5 @@
 import { UserModel } from "@goal-tracker/shared/src/api/models/User.model";
+import { TGoal } from "@goal-tracker/shared/src/utils/GoalUtils";
 import bcrypt from "bcrypt";
 
 const toFullJSON: UserModel.InstanceMethods["toFullJSON"] = async function(this: UserModel.Document) {
@@ -37,7 +38,7 @@ const removeSensitiveData = function(user: UserModel.User): UserModel.WithoutSen
 const addJWTHash: UserModel.InstanceMethods["addJWTHash"] = async function(this: UserModel.Document, hash) {
 	this.jwtHash = {...(this.jwtHash ?? {}), [hash]: true}
 	await this.save();
-} 
+}
 
 const removeJWTHash: UserModel.InstanceMethods["removeJWTHash"] = async function(this: UserModel.Document, hash) {
 	const newJwtHashObj = {...this.jwtHash};
@@ -47,10 +48,28 @@ const removeJWTHash: UserModel.InstanceMethods["removeJWTHash"] = async function
 	await this.save();
 }
 
+const addGoal: UserModel.InstanceMethods["addGoal"] = async function(this: UserModel.Document, goal: TGoal) {
+	try {
+		this.goals = {
+			...(this.goals ?? {}),
+			[goal.category]: [
+				...(this.goals[goal.category]),
+				goal
+			]
+		}
+		await this.save();
+
+		return goal;
+	} catch (err) {
+		return undefined;
+	}
+}
+
 export const UserMethods: UserModel.InstanceMethods = {
 	toFullJSON,
 	toShallowJSON,
 	validatePassword,
 	addJWTHash,
-	removeJWTHash
+	removeJWTHash,
+	addGoal
 }

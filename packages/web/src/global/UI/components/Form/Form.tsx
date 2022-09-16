@@ -80,7 +80,7 @@ type FormField<T extends TFormFieldTypes, TValidFieldId extends string = string>
 	errMsg?: string | null;
 }
 
-export type TValidFormField<TValidFieldId extends string = string> = FormTextInputFieldProps<TValidFieldId> | FormTextareaProps | RadioFormFieldProps;
+export type TValidFormField<TValidFieldId extends string = string> = FormTextInputFieldProps<TValidFieldId> | FormTextareaProps<TValidFieldId> | RadioFormFieldProps<TValidFieldId>;
 
 export type FormTextInputFieldProps<TValidFieldId extends string = string> = FormField<"Input", TValidFieldId> & {
 	placeholder: string;
@@ -113,7 +113,7 @@ export const FormTextInputField = (props: FormTextInputFieldProps) => {
 	)
 }
 
-export type FormTextareaProps = FormField<"Textarea"> & {
+export type FormTextareaProps<TValidFieldId extends string = string> = FormField<"Textarea", TValidFieldId> & {
 	placeholder: string;
 	required?: boolean;
 	classes?: ClassesProp<"root" | "fieldWrapper" | "textarea" | "placeholder" | "errMsg">
@@ -163,7 +163,7 @@ const FormFieldWrapper = ({ placeholder, children, classes, inputHasValue, input
 	)
 }
 
-type RadioFormFieldProps = FormField<"Radio"> & {
+type RadioFormFieldProps<TValidFieldId extends string = string> = FormField<"Radio", TValidFieldId> & {
 	title: string;
 	defaultValue?: string;
 	options: { title: string; id: string; value: string }[];

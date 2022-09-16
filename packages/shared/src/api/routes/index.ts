@@ -1,4 +1,5 @@
 import { AuthRoutes } from "./auth.routes";
+import { GoalRoutes } from "./goal.routes";
 import { UserRoutes } from "./user.routes";
 
 /** Utility type that returns type of params object parameter used in functions for getting API endpoints */
@@ -8,5 +9,6 @@ export type TRouteUrlParams<TRequiredVars extends string = "", TOptionalVars ext
 
 export const Routes = {
 	Auth: AuthRoutes,
-	User: UserRoutes
+	User: UserRoutes,
+	Goal: GoalRoutes
 }
