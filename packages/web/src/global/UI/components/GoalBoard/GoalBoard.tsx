@@ -10,7 +10,7 @@ import styles from "./GoalBoard.module.scss";
 
 const mockGoal: TGoal = {
 	title: "This is a goal of mine",
-	desc: "This is a very cool goal that I don't have a good description for, but this will work for now",
+	notes: "This is a very cool goal that I don't have a good description for, but this will work for now",
 	isComplete: false,
 	category: "today",
 	id: ""

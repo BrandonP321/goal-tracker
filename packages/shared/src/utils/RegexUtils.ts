@@ -1,4 +1,6 @@
-import { GoalCategories } from "./GoalUtils";
+import { TGoalCategory } from "./GoalUtils";
+
+export const GoalCategories: TGoalCategory[] = ["today", "week", "month", "unassigned"];
 
 export class RegexUtils {
     public static emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;

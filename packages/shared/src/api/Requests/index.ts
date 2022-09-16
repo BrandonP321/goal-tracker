@@ -2,7 +2,7 @@ import { AxiosError, AxiosResponse } from "axios";
 import { TRouteUrlParams } from "../routes";
 import { HttpStatusCode } from "./HttpStatusCodes";
 
-export type TAPIRequest<UrlParams extends TRouteUrlParams, ReqBody = {}, ResBody = {}> = {
+export type TAPIRequest<UrlParams extends TRouteUrlParams = {}, ReqBody = {}, ResBody = {}> = {
 	Urlparams: UrlParams;
 	ReqBody: ReqBody;
 	ResBody: ResBody;

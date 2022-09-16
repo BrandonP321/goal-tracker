@@ -81,7 +81,7 @@ type TFormProps = {
 
 const LoginForm = (props: TFormProps) => {
 	const handleSubmit: FormSubmissionHandler<TLoginFieldId> = (formData, setErrors) => {
-		APIFetcher.Loginuser(formData).then(({ data }) => {
+		APIFetcher.LoginUser(formData).then(({ data }) => {
 			console.log(data)
 		}).catch(({response}: LoginUserRequest.ErrResponse) => {
 			const err = response?.data;

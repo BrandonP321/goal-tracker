@@ -6,8 +6,6 @@ export type TGoalCategory = "today" | "week" | "month" | "unassigned"
 
 export type TGoalCreationFieldId = "title" | "notes" | "category";
 
-export const GoalCategories: TGoalCategory[] = ["today", "week", "month", "unassigned"];
-
 export type TGoal = {
   title: string;
   notes: string;

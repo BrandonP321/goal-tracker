@@ -13,7 +13,7 @@ type GoalCardProps = TGoal & {
 }
 
 export const GoalCard = (props: GoalCardProps) => {
-	const { title, desc, category, isComplete, onMouseDown, id } = props;
+	const { title, notes, category, isComplete, onMouseDown, id } = props;
 
 	const dispatch = useAppDispatch();
 
@@ -53,7 +53,7 @@ export const GoalCard = (props: GoalCardProps) => {
 				</div>
 			</div>
 			<p className={styles.cardTitle}>{title}</p>
-			<p className={styles.cardBlurb}>{desc}</p>
+			<p className={styles.cardBlurb}>{notes}</p>
 		</div>
 	)
 }

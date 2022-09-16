@@ -14,3 +14,10 @@ export const CreateGoalErrors = {
 		invalidFields: TFormFieldErrors<TGoalCreationFieldId>
 	}) => getReqErrWithDefaults({ status: HttpStatusCode.BadRequest, errCode: CreateGoalReqErrorCodes.InvalidFieldInput }, params),
 } as const;
+
+export const GetUserGoalsReqErrorCodes = {  } as const;
+
+export const GetUserGoalsErrors = {
+	...DefaultReqErrors,
+	...UserRequestErrors,
+} as const;

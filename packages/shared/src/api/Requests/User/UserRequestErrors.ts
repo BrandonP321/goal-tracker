@@ -8,10 +8,3 @@ export const GetFullUserErrors = {
 	...DefaultReqErrors,
 	...UserRequestErrors,
 } as const;
-
-export const GetUserGoalsReqErrorCodes = {  } as const;
-
-export const GetUserGoalsErrors = {
-	...DefaultReqErrors,
-	...UserRequestErrors,
-} as const;

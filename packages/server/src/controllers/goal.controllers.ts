@@ -1,4 +1,4 @@
-import { CreateGoalRequest, CreateGoalErrors } from "@goal-tracker/shared/src/api/Requests/Goal";
+import { CreateGoalRequest, CreateGoalErrors, GetUserGoalsRequest } from "@goal-tracker/shared/src/api/Requests/Goal";
 import { TRouteController } from ".";
 import { ControllerUtils } from "~Utils/ControllerUtils";
 import { TUserDocLocals } from "~Middleware/GetUser.middleware";
@@ -30,4 +30,8 @@ export const CreateGoalController: TRouteController<CreateGoalRequest.TRequest, 
 	}
 
 	return res.json(newGoal).end();
+}
+
+export const GetUserGoalsController: TRouteController<GetUserGoalsRequest.TRequest, TUserDocLocals> = async (req, res) => {
+	return res.json(res.locals.user.goals).end();
 }
