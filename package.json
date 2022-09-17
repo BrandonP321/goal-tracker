@@ -2,7 +2,8 @@
     "name": "goal-tracker",
     "packageManager": "yarn@3.2.3",
     "engines": {
-        "node": "16.17.0"
+        "node": "16.17.0",
+        "yarn": "3.2.3"
     },
     "workspaces": [
         "packages/*"
