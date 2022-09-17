@@ -1,7 +1,6 @@
 {
     "name": "goal-tracker",
     "packageManager": "yarn@3.2.3",
-    "private": false,
     "engines": {
         "node": "16.17.0"
     },
@@ -15,10 +14,13 @@
         "web:client:start": "yarn web start",
         "server:start": "yarn server start",
         "web:start": "yarn concurrently --kill-others-on-fail -n \"SERVER,WEB\" -c \"magenta,cyan\" \"yarn server:start\" \"yarn web:client:start\"",
-        "postinstall": "if [ $SERVER_ENV ]; then yarn server:install",
+        "postinstallx": "if [ $SERVER_ENV ]; then yarn server:install",
         "server:install": "yarn server install"
     },
     "devDependencies": {
         "concurrently": "^7.4.0"
+    },
+    "dependencies": {
+        "typescript": "^4.8.2"
     }
 }
