@@ -11,7 +11,9 @@
         "shared": "yarn workspace @goal-tracker/shared",
         "web:client:start": "yarn web start",
         "server:start": "yarn server start",
-        "web:start": "yarn concurrently --kill-others-on-fail -n \"SERVER,WEB\" -c \"magenta,cyan\" \"yarn server:start\" \"yarn web:client:start\""
+        "web:start": "yarn concurrently --kill-others-on-fail -n \"SERVER,WEB\" -c \"magenta,cyan\" \"yarn server:start\" \"yarn web:client:start\"",
+        "postinstall": "if [ $SERVER_ENV ]; then yarn server:install",
+        "server:install": "yarn server install"
     },
     "devDependencies": {
         "concurrently": "^7.4.0"
