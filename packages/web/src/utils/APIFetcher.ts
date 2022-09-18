@@ -7,15 +7,14 @@ import axios, { AxiosResponse } from "axios";
 type AxiosRequest<T extends TAPIRequest = TAPIRequest> = (data: T["ReqBody"]) => Promise<AxiosResponse<T["ResBody"]>>
 
 export class APIFetcher {
-	// TODO: should use env var
-	private static APIDomain = "http://localhost:8000";
+	private static APIDomain = process.env.REACT_APP_API_DOMAIN;
 
 	public static post = function<T extends TAPIRequest>(path: string): AxiosRequest<T> {
-		return (data) => axios.post(`${APIFetcher.APIDomain}${path}`, data)
+		return (data) => axios.post(`${APIFetcher.APIDomain}${path}`, data, { withCredentials: true })
 	}
 
 	public static get = function<T extends TAPIRequest>(path: string): AxiosRequest<T> {
-		return () => axios.get(`${APIFetcher.APIDomain}${path}`);
+		return () => axios.get(`${APIFetcher.APIDomain}${path}`, { withCredentials: true });
 	}
 
 	/* AUTH */
