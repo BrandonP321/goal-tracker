@@ -26,7 +26,8 @@ export class JWTUtils {
 	public static generateTokenCookies = (tokens: TAuthTokens, res: Response) => {
 		res.cookie(authTokenCookieName, JSON.stringify(tokens), {
 			secure: ENVUtils.isLiveEnv,
-			httpOnly: true
+			httpOnly: true,
+			sameSite: "none"
 		})
 	}
 
