@@ -1,3 +1,4 @@
+import { GetUserGoalsRequest } from "@goal-tracker/shared/src/api/Requests/Goal/Goal.requests";
 import { TGoal, TGoalCategory } from "@goal-tracker/shared/src/utils/GoalUtils";
 import { useEffect, useRef, useState } from "react";
 import { GoalCard } from "~Components/GoalCard/GoalCard";
@@ -5,20 +6,9 @@ import { GoalCreationModal } from "~Components/GoalCreationModal/GoalCreationMod
 import { GradientBtn } from "~Components/GradientBtn/GradientBtn";
 import { useAppDispatch, useUserGoals } from "~Store/hooks";
 import { setGoals } from "~Store/slices/UserGoals/UserGoalsSlice";
+import { APIFetcher } from "~Utils/APIFetcher";
 import { throttle } from "~Utils/Helpers";
 import styles from "./GoalBoard.module.scss";
-
-const mockGoal: TGoal = {
-	title: "This is a goal of mine",
-	notes: "This is a very cool goal that I don't have a good description for, but this will work for now",
-	isComplete: false,
-	category: "today",
-	id: ""
-}
-
-const mockGoals: TGoal[] = Array(10).fill(mockGoal).map((goal, i) => ({ ...goal, id: JSON.stringify(Math.random()), title: goal.title }));
-const todayMockGoals = mockGoals.slice(0, 4);
-const weekMockGoals: TGoal[] = mockGoals.slice(5, mockGoals.length)?.map(goal => ({ ...goal, category: "week" }));
 
 type GoalBoardProps = {
 
@@ -37,7 +27,12 @@ export const GoalBoard = (props: GoalBoardProps) => {
 	const boardRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
-		dispatch(setGoals({ month: [], week: weekMockGoals, today: todayMockGoals, unassigned: [] }))
+		APIFetcher.GetUserGoals({}).then(({ data }) => {
+			dispatch(setGoals(data));
+		}).catch(({ response }: GetUserGoalsRequest.ErrResponse) => {
+			// TODO: create toast system for rendering errors like this
+			alert("unable to fetch goals")
+		})
 	}, [])
 
 	const handleMouseDrag: React.MouseEventHandler<HTMLDivElement> = (e) => {
