@@ -40,7 +40,7 @@ export class GoalUtils {
 		return FormUtils.ValidateFormFields(fields, this.GoalCreationFields);
 	}
 
-	public static ValidateGoalUpdateFields = (fields: TFilledFormFields<TGoalUpdateFieldId>) => {
+	public static ValidateGoalUpdateFields = (fields: Partial<TFilledFormFields<TGoalUpdateFieldId>>) => {
 		return FormUtils.ValidateFormFields(fields, this.GoalUpdateFields);
 	}
 

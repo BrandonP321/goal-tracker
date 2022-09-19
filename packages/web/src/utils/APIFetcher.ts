@@ -1,6 +1,6 @@
 import { TAPIRequest } from "@goal-tracker/shared/src/api/Requests";
 import { LoginUserRequest, RegisterUserRequest } from "@goal-tracker/shared/src/api/Requests/Auth/Auth.requests";
-import { GetUserGoalsRequest } from "@goal-tracker/shared/src/api/Requests/Goal/Goal.requests";
+import { GetUserGoalsRequest, UpdateGoalRequest } from "@goal-tracker/shared/src/api/Requests/Goal/Goal.requests";
 import { Routes } from "@goal-tracker/shared/src/api/routes";
 import axios, { AxiosResponse } from "axios";
 
@@ -13,6 +13,10 @@ export class APIFetcher {
 		return (data) => axios.post(`${APIFetcher.APIDomain}${path}`, data, { withCredentials: true })
 	}
 
+	public static put = function<T extends TAPIRequest>(path: string): AxiosRequest<T> {
+		return (data) => axios.put(`${APIFetcher.APIDomain}${path}`, data, { withCredentials: true })
+	}
+
 	public static get = function<T extends TAPIRequest>(path: string): AxiosRequest<T> {
 		return () => axios.get(`${APIFetcher.APIDomain}${path}`, { withCredentials: true });
 	}
@@ -23,5 +27,6 @@ export class APIFetcher {
 
 	/* GOALS */
 	public static GetUserGoals = APIFetcher.get<GetUserGoalsRequest.TRequest>(Routes.Goal.GetUserGoals({}));
+	public static UpdateUserGoal = APIFetcher.put<UpdateGoalRequest.TRequest>(Routes.Goal.UpdateGoal({}));
 }
 

@@ -95,7 +95,7 @@ const updateGoal: UserModel.InstanceMethods["updateGoal"] = async function(this:
 		this.goals[category]?.splice(goalIndex, 1);
 
 		// push goal to new array
-		this.goals[newCategory]?.push(modifiedGoal);
+		this.goals[newCategory]?.unshift(modifiedGoal);
 	}
 
 	// notify mongoose that this user's goals have been updated

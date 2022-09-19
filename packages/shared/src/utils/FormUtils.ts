@@ -8,7 +8,7 @@ export type TFormField<TValidFieldId extends string> = {
 	 * err msg to display if test fails.  Also takes in all other fields as an argument
 	 * for any fields that need to be compared against eachother
 	 */
-	tests: { test: (value: string, allFields: TFilledFormFields<TValidFieldId>) => boolean, errMsg: string }[];
+	tests: { test: (value: string, allFields: Partial<TFilledFormFields<TValidFieldId>>) => boolean, errMsg: string }[];
 }
 
 export type TFilledFormFields<TValidFieldId extends string> = { [key in TValidFieldId]: string }
@@ -21,7 +21,7 @@ export class FormUtils {
 	/**
 	 * Validates all fields user has filled out.
 	 */
-	public static ValidateFormFields = <TValidFieldId extends string>(fields: TFilledFormFields<TValidFieldId>, validationFields: TFormField<TValidFieldId>[]) => {
+	public static ValidateFormFields = <TValidFieldId extends string>(fields: Partial<TFilledFormFields<TValidFieldId>>, validationFields: TFormField<TValidFieldId>[]) => {
 		const errors: TFormFieldErrors<TValidFieldId> = {}
 
 		for (const fieldValidation of validationFields) {
@@ -47,7 +47,7 @@ export class FormUtils {
 		return errors;
 	}
 
-	private static isRequiredFieldValid = (value: string) => {
+	private static isRequiredFieldValid = (value?: string) => {
 		return !!value;
 	}
 

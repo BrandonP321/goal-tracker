@@ -7,6 +7,7 @@ import { useAppDispatch } from "~Store/hooks";
 import { moveGoal } from "~Store/slices/UserGoals/UserGoalsSlice";
 import styles from "./GoalCard.module.scss";
 import { GoalUtils, TGoal } from "@goal-tracker/shared/src/utils/GoalUtils";
+import { APIFetcher } from "~Utils/APIFetcher";
 
 type GoalCardProps = TGoal & {
 	onMouseDown: () => void;
@@ -28,8 +29,14 @@ export const GoalCard = (props: GoalCardProps) => {
 			onClick: () => {
 				dispatch(moveGoal({ currentCategory: category, goalId: id, newCategory: cat }))
 				setShowMoveDropdown(false);
+
+				APIFetcher.UpdateUserGoal({ goalId: id, goalCategory: category, category: cat }).then(res => {
+					console.log(res.data);
+				}).catch(({ data }) => {
+					console.log(data);
+				})
 			},
-		})))
+		})));
 
 		const hideDropdown = () => setShowMoveDropdown(false);
 

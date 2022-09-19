@@ -31,8 +31,8 @@ export namespace GetUserGoalsRequest {
 
 export namespace UpdateGoalRequest {
 	export type TUrlParams = TRouteUrlParams<"", "">;
-	export type TReqBody = TFilledFormFields<TGoalUpdateFieldId> & {
-		category: TGoalCategory;
+	export type TReqBody = Partial<TFilledFormFields<TGoalUpdateFieldId>> & {
+		category?: TGoalCategory;
 		goalId: string;
 		goalCategory: TGoalCategory;
 	};
