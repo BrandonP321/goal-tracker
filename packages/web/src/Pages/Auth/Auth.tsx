@@ -9,6 +9,7 @@ import { LoginUserRequest, RegisterUserRequest } from "@goal-tracker/shared/src/
 import { AuthLoginReqErrorCodes, AuthRegistrationReqErrorCodes } from '@goal-tracker/shared/src/api/Requests/Auth/AuthRequestErrors';
 import { APIFetcher } from '~Utils/APIFetcher';
 import { FormUtils, TFilledFormFields, TFormFieldErrors } from '@goal-tracker/shared/src/utils/FormUtils';
+import { useNavigate } from 'react-router-dom';
 
 type AuthProps = {}
 
@@ -41,11 +42,12 @@ type AuthFormProps = Pick<FormProps, "onSubmit" | "validateFields"> & {
 	changeFormText: string;
 	changeFormLinkText: string;
 	switchForm: () => void;
+	isLoading: boolean;
 }
 
 const AuthForm = (props: AuthFormProps) => {
 	const {
-		fields, title, changeFormText, changeFormLinkText, switchForm, ...rest
+		fields, title, changeFormText, changeFormLinkText, switchForm, isLoading, ...rest
 	} = props;
 
 	const [validationErrors, setValidationErrors] = useFormValidationErrors();
@@ -57,7 +59,7 @@ const AuthForm = (props: AuthFormProps) => {
 			{validationErrors.formError &&
 				<p className={styles.formError}>{validationErrors.formError}</p>
 			}
-			<GradientBtn>{title}</GradientBtn>
+			<GradientBtn isLoading={isLoading}>{title}</GradientBtn>
 			<p className={styles.changeFormText}>{changeFormText} <strong onClick={switchForm}>{changeFormLinkText}</strong></p>
 		</Form>
 	)
@@ -80,10 +82,19 @@ type TFormProps = {
 }
 
 const LoginForm = (props: TFormProps) => {
+	const navigate = useNavigate();
+
+	/** Disables "log in" button if true */
+	const [isLoading, setIsLoading] = useState(false);
+
 	const handleSubmit: FormSubmissionHandler<TLoginFieldId> = (formData, setErrors) => {
+		setIsLoading(true);
+
 		APIFetcher.LoginUser(formData).then(({ data }) => {
-			console.log(data)
+			navigate("/Dashboard");
 		}).catch(({response}: LoginUserRequest.ErrResponse) => {
+			setIsLoading(false);
+
 			const err = response?.data;
 
 			switch (err?.errCode) {
@@ -112,15 +123,25 @@ const LoginForm = (props: TFormProps) => {
 			switchForm={props.toggleForm}
 			onSubmit={handleSubmit} 
 			validateFields={validateFields}
+			isLoading={isLoading}
 		/>
 	)
 }
 
 const RegisterForm = (props: TFormProps) => {
+	const navigate = useNavigate();
+
+	/** Disables "log in" button if true */
+	const [isLoading, setIsLoading] = useState(false);
+
 	const handleSubmit: FormSubmissionHandler<TRegistrationFieldId> = (formData, setErrors) => {
+		setIsLoading(true);
+
 		APIFetcher.RegisterUser(formData).then(({ data }) => {
-			console.log(data);
+			navigate("/Dashboard");
 		}).catch(({ response }: RegisterUserRequest.ErrResponse) => {
+			setIsLoading(false);
+
 			const err = response?.data;
 
 			switch (err?.errCode) {
@@ -145,6 +166,15 @@ const RegisterForm = (props: TFormProps) => {
 	}
 
 	return (
-		<AuthForm title={Loc.Auth.Register} fields={registerFields} changeFormText={Loc.Auth.AlreadyHaveAccount} changeFormLinkText={Loc.Auth.SignIn} switchForm={props.toggleForm} onSubmit={handleSubmit} validateFields={validateFields}/>
+		<AuthForm
+			isLoading={isLoading}
+			title={Loc.Auth.Register}
+			fields={registerFields}
+			changeFormText={Loc.Auth.AlreadyHaveAccount}
+			changeFormLinkText={Loc.Auth.SignIn}
+			switchForm={props.toggleForm}
+			onSubmit={handleSubmit} 
+			validateFields={validateFields}
+		/>
 	)
 }

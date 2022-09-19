@@ -16,6 +16,14 @@ $btnTransitionDuration: 0.25s;
 		box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.5);
 		transform: translateY(-0.15rem);
 	}
+
+	&:disabled {
+		opacity: 0.7;
+
+		&:hover {
+			transform: none;
+		}
+	}
 }
 
 .darkToColorBtn,
@@ -87,4 +95,9 @@ $btnTransitionDuration: 0.25s;
 	&::after {
 		background: $gradientBgDark;
 	}
+}
+
+.spinner {
+	animation: Spin 1s linear infinite;
+	color: #fff;
 }
