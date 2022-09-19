@@ -1,13 +1,42 @@
 @import "../../../UI/styles/uiBase.scss";
 
-.spinner {
+$smallBallHeight: 2.5rem;
+$animationDuration: 0.75s;
+
+.spinnerWrapper {
+	position: relative;
 	opacity: 0;
-	width: 5rem;
-	height: 5rem;
-	border: 2px solid red;
+	animation: Spin #{$animationDuration * 2} linear infinite reverse;
 
 	&.show {
 		opacity: 1;
-		animation: Spin 5s linear infinite;
 	}
+}
+
+.blackBallWrapper {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	animation: Spin $animationDuration linear infinite;
+}
+
+.ball.pink {
+	position: relative;
+	width: 5rem;
+	height: 5rem;
+	background: $gradientBgColored;
+	border-radius: 50%;
+}
+
+.ball.black {
+	position: absolute;
+	top: 50%;
+	left: 0;
+	transform: translateY(-50%);
+	width: $smallBallHeight;
+	height: $smallBallHeight;
+	border-radius: 50%;
+	background: $gradientBgDark;
 }

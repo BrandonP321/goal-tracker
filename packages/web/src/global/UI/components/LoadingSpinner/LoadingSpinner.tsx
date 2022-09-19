@@ -5,12 +5,17 @@ import styles from "./LoadingSpinner.module.scss";
 
 type LoadingSpinnerProps = {
 	show: boolean;
-	classes?: ClassesProp<"spinner" | "show">;
+	classes?: ClassesProp<"root" | "show">;
 }
 
 export default function LoadingSpinner({ show, classes }: LoadingSpinnerProps) {
 
 	return (
-		<div className={classNames(styles.spinner, classes?.spinner, show && styles.show, show && classes?.show)} />
+		<div className={classNames(styles.spinnerWrapper, classes?.root, show && classNames(styles.show, classes?.show))}>
+			<div className={classNames(styles.ball, styles.pink)}/>
+			<div className={styles.blackBallWrapper}>
+				<div className={classNames(styles.ball, styles.black)}/>
+			</div>
+		</div>
 	)
 }
