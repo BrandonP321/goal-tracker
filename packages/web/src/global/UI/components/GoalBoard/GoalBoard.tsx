@@ -5,6 +5,7 @@ import { GoalCard } from "~Components/GoalCard/GoalCard";
 import { GoalCreationModal } from "~Components/GoalCreationModal/GoalCreationModal";
 import { GradientBtn } from "~Components/GradientBtn/GradientBtn";
 import { useAppDispatch, useUserGoals } from "~Store/hooks";
+import { hideLoadingSpinner, showLoadingSpinner } from "~Store/slices/PageLoading/PageLoadingSlice";
 import { setGoals } from "~Store/slices/UserGoals/UserGoalsSlice";
 import { APIFetcher } from "~Utils/APIFetcher";
 import { throttle } from "~Utils/Helpers";
@@ -27,11 +28,12 @@ export const GoalBoard = (props: GoalBoardProps) => {
 	const boardRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
+		dispatch(showLoadingSpinner());
+
 		APIFetcher.GetUserGoals({}).then(({ data }) => {
 			dispatch(setGoals(data));
+			dispatch(hideLoadingSpinner());
 		}).catch(({ response }: GetUserGoalsRequest.ErrResponse) => {
-			// TODO: create toast system for rendering errors like this
-			alert("unable to fetch goals")
 		})
 	}, [])
 
