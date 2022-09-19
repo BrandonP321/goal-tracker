@@ -1,5 +1,6 @@
 import { UserModel } from "@goal-tracker/shared/src/api/models/User.model";
-import { TGoal } from "@goal-tracker/shared/src/utils/GoalUtils";
+import { UpdateGoalRequest } from "@goal-tracker/shared/src/api/Requests/Goal/Goal.requests";
+import { TGoal, TGoalCategory } from "@goal-tracker/shared/src/utils/GoalUtils";
 import bcrypt from "bcrypt";
 
 const toFullJSON: UserModel.InstanceMethods["toFullJSON"] = async function(this: UserModel.Document) {
@@ -65,11 +66,52 @@ const addGoal: UserModel.InstanceMethods["addGoal"] = async function(this: UserM
 	}
 }
 
+const updateGoal: UserModel.InstanceMethods["updateGoal"] = async function(this: UserModel.Document, goalId: string, category: TGoalCategory, updates: UpdateGoalRequest.TReqBody) {
+	const goalIndex = this.goals?.[category]?.findIndex(g => g.id === goalId);
+
+	if (goalIndex === -1) {
+		return { foundGoal: false, updatedGoal: false };
+	}
+
+	const goal = this.goals[category][goalIndex];
+	
+	const newCategory = updates.category;
+	const isChangingCategories = !!newCategory && (goal.category !== updates.category)	
+	
+	// update goal with new values
+	this.goals[category][goalIndex] = { 
+		id: goal.id,
+		category: updates.category ?? goal.category,
+		isComplete: updates.isComplete ? updates.isComplete === "true" : goal.isComplete,
+		notes: updates.notes ?? goal.notes,
+		title: updates.title ?? goal.title
+	}
+	
+	const modifiedGoal = this.goals[category][goalIndex];
+
+	// if goal is being moved to new category, move goal to new array of goals
+	if (isChangingCategories) {
+		// remove goal from it's current array
+		this.goals[category]?.splice(goalIndex, 1);
+
+		// push goal to new array
+		this.goals[newCategory]?.push(modifiedGoal);
+	}
+
+	// notify mongoose that this user's goals have been updated
+	this.markModified("goals");
+	
+	await this.save()
+
+	return { foundGoal: true, updatedGoal: true };
+}
+
 export const UserMethods: UserModel.InstanceMethods = {
 	toFullJSON,
 	toShallowJSON,
 	validatePassword,
 	addJWTHash,
 	removeJWTHash,
-	addGoal
+	addGoal,
+	updateGoal
 }

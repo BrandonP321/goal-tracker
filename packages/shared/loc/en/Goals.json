@@ -1,3 +1,5 @@
 {
-	"InvalidCategory": "Invalid category"
+	"InvalidCategory": "Invalid category",
+	"InvalidNotesForUpdate": "Invalid field value",
+	"InvalidCompletionFieldValue": "Must be a true or false value"
 }

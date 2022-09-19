@@ -31,7 +31,7 @@ export class FormUtils {
 			if ((fieldValidation.required && !this.isRequiredFieldValid(fieldValue))) {
 				// if field is required but emptry, send error
 				errors[fieldValidation.fieldId] = Loc.Auth.FieldRequired;
-			} else {
+			} else if (fieldValue) {
 				// run each test against the field's value
 				for (let fieldTest of fieldValidation.tests) {
 					// if test fails, push to to err array and then stop iterating on this field's tests

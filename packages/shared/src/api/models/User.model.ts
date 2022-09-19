@@ -1,5 +1,6 @@
 import { ResponseJSON, TDefaultModelProps, TMongooseDoc, TMongooseModel, TMongooseSchema } from ".";
 import { TGoal, TGoalCategory } from "../../utils/GoalUtils";
+import { UpdateGoalRequest } from "../Requests/Goal";
 
 export namespace UserModel {
 	export type User = TDefaultModelProps & {
@@ -22,6 +23,7 @@ export namespace UserModel {
 		addJWTHash: (hash: string) => Promise<void>;
 		removeJWTHash: (hash: string) => Promise<void>;
 		addGoal: (goal: TGoal) => Promise<TGoal | undefined>;
+		updateGoal: (goalId: string, category: TGoalCategory, updates: UpdateGoalRequest.TReqBody) => Promise<{ foundGoal: boolean, updatedGoal: boolean }>
 	}
 	
 	export type StaticMethods = {

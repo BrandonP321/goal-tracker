@@ -27,7 +27,7 @@ export class JWTUtils {
 		res.cookie(authTokenCookieName, JSON.stringify(tokens), {
 			secure: ENVUtils.isLiveEnv,
 			httpOnly: true,
-			sameSite: "none"
+			sameSite: ENVUtils.isLiveEnv ? "none" : "lax"
 		})
 	}
 
