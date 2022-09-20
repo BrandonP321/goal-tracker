@@ -27,7 +27,9 @@ export class JWTUtils {
 		res.cookie(authTokenCookieName, JSON.stringify(tokens), {
 			secure: ENVUtils.isLiveEnv,
 			httpOnly: true,
-			sameSite: ENVUtils.isLiveEnv ? "none" : "lax"
+			sameSite: ENVUtils.isLiveEnv ? "none" : "lax",
+			// max age should be equivalent to the life span of a refresh token
+			maxAge: parseInt(ENVUtils.Vars.REFRESH_TOKEN_EXPIRES_IN.split("s")[0])
 		})
 	}
 
