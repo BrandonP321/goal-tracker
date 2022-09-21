@@ -9,15 +9,15 @@
 	@include mobileVW() {
 		padding: 1rem 1rem 0 1rem;
 	}
+	
+	.logoutBtn {
+		width: initial;
+		padding: 0.75rem 1rem;
+		box-shadow: 0 0 1rem 0 rgba(#000, 0.75);
+	}
 }
 
 .title {
 	font-size: 2rem;
 	font-weight: bold;
-}
-
-.logoutBtn {
-	width: initial;
-	padding: 0.75rem 1rem;
-	box-shadow: 0 0 1rem 0 rgba(#000, 0.75);
 }
