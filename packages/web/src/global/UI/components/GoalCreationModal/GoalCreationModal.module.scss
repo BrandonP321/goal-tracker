@@ -8,6 +8,7 @@
 		border-radius: 1rem;
 		box-shadow: 0 0 2rem 0 rgba(0, 0, 0, 0.75);
 		background-color: $bodyBgPrimary;
+		overflow-y: auto;
 	}
 
 	.modalTitle {
@@ -31,7 +32,13 @@
 		.submitBtn,
 		.cancelBtn {
 			max-width: 15rem;
-			width: 50%;
+			width: calc(50% - 0.5rem);
+
+			@include mobileVW() {
+				margin: 0 0 1rem 0;
+				width: 100%;
+				max-width: none;
+			}
 		}
 
 		.submitBtn {

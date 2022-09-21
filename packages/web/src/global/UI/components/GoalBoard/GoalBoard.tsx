@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { GoalCard } from "~Components/GoalCard/GoalCard";
 import { GoalCreationModal } from "~Components/GoalCreationModal/GoalCreationModal";
 import { GradientBtn } from "~Components/GradientBtn/GradientBtn";
-import { useAppDispatch, useUserGoals } from "~Store/hooks";
+import { useAppDispatch, useResponsive, useUserGoals } from "~Store/hooks";
 import { hideLoadingSpinner, showLoadingSpinner } from "~Store/slices/PageLoading/PageLoadingSlice";
 import { setGoals } from "~Store/slices/UserGoals/UserGoalsSlice";
 import { APIFetcher } from "~Utils/APIFetcher";
@@ -22,6 +22,7 @@ const setThrottleWait = (value: boolean) => throttleWait = value;
 export const GoalBoard = (props: GoalBoardProps) => {
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
+	const mobile = useResponsive("mobile");
 
 	const { errorUpdatingGoal, goals, haveGoalsLoaded } = useUserGoals();
 
@@ -84,7 +85,7 @@ export const GoalBoard = (props: GoalBoardProps) => {
 			className={styles.board}
 			onMouseDown={handleBoardMouseDown}
 			onMouseUp={resetDragSettings}
-			onMouseMove={(e) => throttle(() => handleMouseDrag(e), 1000 / 90, throttleWait, setThrottleWait)}
+			onMouseMove={!mobile ? ((e) => throttle(() => handleMouseDrag(e), 1000 / 90, throttleWait, setThrottleWait)) : undefined}
 		>
 			{goalLists?.map((g, i) => (
 				<GoalList key={i} goals={g.goals} title={g.title} preventMouseScroll={resetDragSettings} category={g.category} />

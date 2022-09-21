@@ -13,7 +13,9 @@
 	}
 
 	&:hover {
-		background-color: rgba(#ebecf0, 0.5);
+		@include notMobileVW() {
+			background-color: rgba(#ebecf0, 0.5);
+		}
 	}
 }
 
@@ -42,24 +44,39 @@ $iconHelperTranslate: translate(-50%, calc(-100% - 0.4rem));
 			right: 0;
 			bottom: 0;
 			border-radius: inherit;
-			background: $gradientBgColored;
 			opacity: 0;
 			transform: scale(0.8);
 			transition: all 0.15s;
+
+			@include notMobileVW() {
+				background: $gradientBgColored;
+			}
+
+			@include mobileVW() {
+				background-color: #000;
+			}
 		}
 
 		&:hover {
 
 			&::before {
-				transform: scale(1);
-				opacity: 1;
+				@include notMobileVW() {
+					transform: scale(1);
+					opacity: 1;
+				}
+
+				@include mobileVW() {
+					animation: BtnBounce 0.3s;
+				}
 			}
 
 			.toolIcon {
 				color: rgba(#000, 1);
 
 				&.check.complete {
-					color: #fff;
+					@include notMobileVW() {
+						color: #fff;
+					}
 				}
 			}
 
@@ -133,5 +150,20 @@ $iconHelperTranslate: translate(-50%, calc(-100% - 0.4rem));
 		height: 0.5rem;
 		border-radius: 0 0 2px 0;
 		z-index: -1;
+	}
+}
+
+@keyframes BtnBounce {
+	0% {
+		transform: scale(0.7);
+		opacity: 0;
+	}
+	50% {
+		transform: scale(1);
+		opacity: 0.2;
+	}
+	100% {
+		transform: scale(0.8);
+		opacity: 0;
 	}
 }

@@ -6,21 +6,35 @@
 	overflow: auto;
 	padding: 1rem 2rem;
 	scroll-behavior: auto;
+
+	@include mobileVW() {
+		padding: 1rem;
+	}
 }
 
 .goalList {
 	position: relative;
 	height: 100%;
-	width: 30rem;
 	min-width: 30rem;
 	border-radius: 1rem;
 	box-shadow: inset 0 0 2rem 0 rgba(0, 0, 0, 0.5), 0 0 0 -1rem rgba(0, 0, 0, 0.5);
-	margin-right: 5rem;
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
 	user-select: none;
 	transition: box-shadow 0.25s, transform 0.25s;
+
+	@include mobileVW() {
+		min-width: calc(100vw - 2rem);
+	}
+
+	&:not(:nth-last-child(2)) {
+		margin-right: 5rem;
+
+		@include mobileVW() {
+			margin-right: 3rem;
+		}
+	}
 
 	> *:not(.creationModal) {
 		position: relative;

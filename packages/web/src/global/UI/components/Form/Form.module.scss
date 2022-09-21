@@ -75,7 +75,8 @@ $inputBorderColor: rgba(#fff, 0.2);
 
 .radiosWrapper {
 	display: flex;
-	justify-content: space-between;
+	flex-wrap: wrap;
+	justify-content: center;
 	max-width: 30rem;
 	margin: 0 auto;
 }
@@ -86,6 +87,7 @@ $inputBorderColor: rgba(#fff, 0.2);
 	justify-content: center;
 	align-items: center;
 	margin: 0 1rem 1rem 1rem;
+	min-width: 5rem;
 
 	input {
 		position: relative;
