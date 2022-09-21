@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GoalCard } from "~Components/GoalCard/GoalCard";
 import { GoalCreationModal } from "~Components/GoalCreationModal/GoalCreationModal";
+import { GoalUpdateModal } from "~Components/GoalUpdateModal/GoalUpdateModal";
 import { GradientBtn } from "~Components/GradientBtn/GradientBtn";
 import { useAppDispatch, useResponsive, useUserGoals } from "~Store/hooks";
 import { hideLoadingSpinner, showLoadingSpinner } from "~Store/slices/PageLoading/PageLoadingSlice";
@@ -25,6 +26,18 @@ export const GoalBoard = (props: GoalBoardProps) => {
 	const mobile = useResponsive("mobile");
 
 	const { errorUpdatingGoal, goals, haveGoalsLoaded } = useUserGoals();
+
+	const [updateModalData, setUpdateModalData] = useState<null | TGoal>(null);
+	const [showUpdateModalState, setShowUpdateModalState] = useState(false);
+
+	const showUpdateModal = (goal: TGoal) => {
+		setUpdateModalData(goal);
+		setShowUpdateModalState(true);
+	}
+
+	const hideUpdateModal = (e?: React.MouseEvent<HTMLButtonElement>) => {
+		setShowUpdateModalState(false);
+	}
 
 	const isMouseDownRef = useRef(false);
 	const lastMousePos = useRef<number | null>(null);
@@ -88,9 +101,9 @@ export const GoalBoard = (props: GoalBoardProps) => {
 			onMouseMove={!mobile ? ((e) => throttle(() => handleMouseDrag(e), 1000 / 90, throttleWait, setThrottleWait)) : undefined}
 		>
 			{goalLists?.map((g, i) => (
-				<GoalList key={i} goals={g.goals} title={g.title} preventMouseScroll={resetDragSettings} category={g.category} />
+				<GoalList key={i} goals={g.goals} title={g.title} showGoalUpdateModal={showUpdateModal} preventMouseScroll={resetDragSettings} category={g.category} />
 			))}
-
+			<GoalUpdateModal goalData={updateModalData} show={showUpdateModalState} hide={hideUpdateModal} classes={{}} onMouseDown={resetDragSettings}/>
 		</div>
 	)
 }
@@ -100,10 +113,11 @@ type GoalListProps = {
 	title: string;
 	category: TGoalCategory;
 	preventMouseScroll: () => void;
+	showGoalUpdateModal: (goal: TGoal) => void;
 }
 
 const GoalList = (props: GoalListProps) => {
-	const { goals, title, preventMouseScroll, category } = props;
+	const { goals, title, preventMouseScroll, category, showGoalUpdateModal } = props;
 
 	const [creationModalData, setCreationModalData] = useState<null | { category: TGoalCategory }>(null);
 
@@ -121,7 +135,7 @@ const GoalList = (props: GoalListProps) => {
 				<p className={styles.listTitle}>{title}</p>
 				<div className={styles.listGoals}>
 					{goals?.map((g, i) => (
-						<GoalCard {...g} key={i} onMouseDown={preventMouseScroll} />
+						<GoalCard {...g} key={i} showGoalUpdateModal={showGoalUpdateModal} onMouseDown={preventMouseScroll} />
 					))}
 				</div>
 				<GradientBtn onClick={showCreationModal} classes={{ root: styles.createBtn }}>Create New Goal</GradientBtn>

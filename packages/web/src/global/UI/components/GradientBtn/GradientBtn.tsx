@@ -11,16 +11,18 @@ type GradientBtnProps = {
 	/** Shows loading spinner instead of text if true and disables button */
 	isLoading?: boolean;
 	disabled?: boolean;
+	type?: React.ButtonHTMLAttributes<HTMLButtonElement>["type"];
 }
 
 export const GradientBtn = (props: GradientBtnProps) => {
-	const { children, classes, onClick, isLoading, disabled } = props;
+	const { children, classes, onClick, isLoading, disabled, type } = props;
 
 	return (
 		<button 
 			onClick={onClick} 
 			className={classNames(styles.gradientBtn, classes?.root)}
 			disabled={isLoading || disabled}
+			type={type}
 		>
 			{!isLoading && children}
 			{isLoading && 

@@ -1,7 +1,7 @@
 import { faArrowTurnDownRight, faCheckDouble, faTrash } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { DropdownMenu, DropdownMenuProps } from "~Components/DropdownMenu/DropdownMenu";
 import { useAppDispatch } from "~Store/hooks";
 import { moveGoal, removeGoal, updateGoal } from "~Store/slices/UserGoals/UserGoalsSlice";
@@ -13,10 +13,11 @@ import { DeleteGoalReqErrorCodes, DeleteGoalRequest, UpdateGoalReqErrorCodes, Up
 
 type GoalCardProps = TGoal & {
 	onMouseDown: () => void;
+	showGoalUpdateModal: (goal: TGoal) => void;
 }
 
 export const GoalCard = (props: GoalCardProps) => {
-	const { title, notes, category, isComplete, onMouseDown, id } = props;
+	const { title, notes, category, isComplete, onMouseDown, showGoalUpdateModal, id } = props;
 
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
@@ -48,13 +49,17 @@ export const GoalCard = (props: GoalCardProps) => {
 		return () => document.removeEventListener("click", hideDropdown);
 	}, [setShowMoveDropdown, category, id, dispatch])
 
-	const toggleMoveDropdownVisibility = () => {
+	const toggleMoveDropdownVisibility = (e: React.MouseEvent<HTMLDivElement>) => {
+		e.stopPropagation();
+
 		requestAnimationFrame(() => {
 			setShowMoveDropdown(!showMoveDropdown);
 		})
 	}
 
-	const handleDeleteIconClick = () => {
+	const handleDeleteIconClick = (e: React.MouseEvent<HTMLDivElement>) => {
+		e.stopPropagation();
+
 		dispatch(removeGoal({ category, id, isComplete, notes, title }));
 
 		APIFetcher.DeleteGoal({ goalIdURI: encodeURIComponent(id), goalCategoryURI: encodeURIComponent(category) })
@@ -68,7 +73,9 @@ export const GoalCard = (props: GoalCardProps) => {
 			}))
 	}
 
-	const handleCompletionIconClick = () => {
+	const handleCompletionIconClick = (e: React.MouseEvent<HTMLDivElement>) => {
+		e.stopPropagation();
+
 		dispatch(updateGoal({ id, category, isComplete: !isComplete, notes, title }))
 
 		APIFetcher.UpdateUserGoal({
@@ -85,8 +92,12 @@ export const GoalCard = (props: GoalCardProps) => {
 		}))
 	}
 
+	const handleClick = () => {
+		showGoalUpdateModal({ id, category, isComplete, notes, title })
+	}
+
 	return (
-		<div className={styles.goalCard} onMouseDown={onMouseDown}>
+		<div className={styles.goalCard} onMouseDown={onMouseDown} onClick={handleClick}>
 			<div className={styles.toolbar}>
 				<div className={styles.toolIconWrapper} onClick={toggleMoveDropdownVisibility}>
 					<GoalCardIconTooltip>Move</GoalCardIconTooltip>

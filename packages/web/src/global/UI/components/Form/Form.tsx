@@ -80,6 +80,7 @@ type FormField<T extends TFormFieldTypes, TValidFieldId extends string = string>
 	name: TValidFieldId;
 	errMsg?: string | null;
 	formRef?: React.MutableRefObject<HTMLFormElement | null>;
+	defaultValue?: string;
 }
 
 export type TValidFormField<TValidFieldId extends string = string> = FormTextInputFieldProps<TValidFieldId> | FormTextareaProps<TValidFieldId> | RadioFormFieldProps<TValidFieldId>;
@@ -94,7 +95,7 @@ export type FormTextInputFieldProps<TValidFieldId extends string = string> = For
 
 export const FormTextInputField = (props: FormTextInputFieldProps) => {
 	const {
-		id, classes, inputType, type, autoComplete, placeholder, errMsg, formRef, ...rest
+		id, classes, inputType, type, autoComplete, placeholder, errMsg, formRef, defaultValue, ...rest
 	} = props;
 
 	const [value, setValue] = useState("");
@@ -104,11 +105,16 @@ export const FormTextInputField = (props: FormTextInputFieldProps) => {
 		formRef?.current?.addEventListener("reset", () => setValue(""))
 	}, [])
 
+	useEffect(() => {
+		setValue(defaultValue ?? "");
+	}, [defaultValue])
+
 	return (
 		<FormFieldWrapper errMsg={errMsg} inputHasValue={!!value} inputId={id} isFocused={isFocused} placeholder={placeholder} classes={classes}>
 			<input {...rest}
 				id={id}
 				className={classNames(styles.formInput, classes?.input)}
+				value={value}
 				type={inputType}
 				autoComplete={autoComplete ? "on" : "off"}
 				onChange={(e) => setValue(e.target.value)}
@@ -127,7 +133,7 @@ export type FormTextareaProps<TValidFieldId extends string = string> = FormField
 
 export const FormTextareaField = (props: FormTextareaProps) => {
 	const {
-		id, classes, type, placeholder, errMsg, formRef, ...rest
+		id, classes, type, placeholder, errMsg, formRef, defaultValue, ...rest
 	} = props;
 
 	const [value, setValue] = useState("");
@@ -137,11 +143,16 @@ export const FormTextareaField = (props: FormTextareaProps) => {
 		formRef?.current?.addEventListener("reset", () => setValue(""))
 	}, [])
 
+	useEffect(() => {
+		setValue(defaultValue ?? "")
+	}, [defaultValue])
+
 	return (
 		<FormFieldWrapper errMsg={errMsg} inputHasValue={!!value} inputId={id} isFocused={isFocused} placeholder={placeholder} classes={classes}>
 			<textarea {...rest}
 				id={id}
 				className={classNames(styles.formInput, styles.textarea, classes?.textarea)}
+				value={value}
 				onChange={(e) => setValue(e.target.value)}
 				onFocus={() => setIsFocused(true)}
 				onBlur={() => setIsFocused(false)}
