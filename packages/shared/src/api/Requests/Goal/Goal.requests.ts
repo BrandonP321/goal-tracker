@@ -3,7 +3,7 @@ import { TFilledFormFields } from "../../../utils/FormUtils";
 import { TGoal, TGoalCategory, TGoalCreationFieldId, TGoalUpdateFieldId } from "../../../utils/GoalUtils";
 import { UserModel } from "../../models/User.model";
 import { TRouteUrlParams } from "../../routes";
-import { CreateGoalErrors, GetUserGoalsErrors, UpdateGoalErrors } from "./GoalRequestErrors";
+import { CreateGoalErrors, DeleteGoalErrors, GetUserGoalsErrors, UpdateGoalErrors } from "./GoalRequestErrors";
 
 export namespace CreateGoalRequest {
 	export type TUrlParams = TRouteUrlParams<"", "">;
@@ -42,4 +42,15 @@ export namespace UpdateGoalRequest {
 
 	export type ErrResponse = TRequestErrResponse<typeof UpdateGoalErrors>;
 	export type Errors = TRequestErrors<typeof UpdateGoalErrors>;
+}
+
+export namespace DeleteGoalRequest {
+	export type TUrlParams = TRouteUrlParams<"goalIdURI" | "goalCategoryURI", "">;
+	export type TReqBody = {}
+	export type TResBody = {};
+
+	export type TRequest = TAPIRequest<TUrlParams, TReqBody, TResBody>;
+
+	export type ErrResponse = TRequestErrResponse<typeof DeleteGoalErrors>;
+	export type Errors = TRequestErrors<typeof DeleteGoalErrors>;
 }

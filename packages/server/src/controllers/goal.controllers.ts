@@ -1,10 +1,11 @@
-import { CreateGoalRequest, CreateGoalErrors, GetUserGoalsRequest, UpdateGoalRequest, UpdateGoalErrors } from "@goal-tracker/shared/src/api/Requests/Goal";
+import { CreateGoalRequest, CreateGoalErrors, GetUserGoalsRequest, UpdateGoalRequest, UpdateGoalErrors, DeleteGoalRequest, DeleteGoalErrors } from "@goal-tracker/shared/src/api/Requests/Goal";
 import { TRouteController } from ".";
 import { ControllerUtils } from "~Utils/ControllerUtils";
 import { TUserDocLocals } from "~Middleware/GetUser.middleware";
-import { GoalUtils, TGoal } from "@goal-tracker/shared/src/utils/GoalUtils";
+import { GoalUtils, TGoal, TGoalCategory } from "@goal-tracker/shared/src/utils/GoalUtils";
 import { JWTUtils } from "~Utils/JWTUtils";
 import db from "~Models";
+import { GoalCategories } from "@goal-tracker/shared/src/utils/RegexUtils";
 
 export const CreateGoalController: TRouteController<CreateGoalRequest.TRequest, TUserDocLocals> = async (req, res) => {
 	const { user } = res.locals;
@@ -55,6 +56,25 @@ export const UpdateGoalController: TRouteController<UpdateGoalRequest.TRequest, 
 		return ControllerUtils.respondWithErr(UpdateGoalErrors.GoalNotFound({}), res);
 	} else if (!updatedGoal) {
 		return ControllerUtils.respondWithUnexpectedErr(res, "Unable to update goal");
+	}
+
+	return res.json({}).end();
+}
+
+export const DeleteGoalController: TRouteController<DeleteGoalRequest.TRequest, TUserDocLocals> = async (req, res) => {
+	const { goalIdURI, goalCategoryURI } = req.params
+
+	const goalId = decodeURIComponent(goalIdURI);
+	const goalCategory = decodeURIComponent(goalCategoryURI) as TGoalCategory;
+
+	if (!goalId || !goalCategory || !(GoalCategories.includes(goalCategory))) {
+		return ControllerUtils.respondWithErr(DeleteGoalErrors.MissingGoalIdOrCategory({}), res);
+	}
+
+	const isGoalRemoved = await res.locals.user.removeGoal(goalId, goalCategory);
+
+	if (!isGoalRemoved) {
+		return ControllerUtils.respondWithErr(DeleteGoalErrors.GoalNotFound({}), res);
 	}
 
 	return res.json({}).end();

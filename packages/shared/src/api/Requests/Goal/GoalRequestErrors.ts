@@ -37,3 +37,15 @@ export const UpdateGoalErrors = {
 	[UpdateGoalReqErrorCodes.GoalNotFound]: (params: {}) => getReqErrWithDefaults({ status: HttpStatusCode.BadRequest, errCode: UpdateGoalReqErrorCodes.GoalNotFound }, params),
 	[UpdateGoalReqErrorCodes.MissingGoalIdOrCategory]: (params: {}) => getReqErrWithDefaults({ status: HttpStatusCode.BadRequest, errCode: UpdateGoalReqErrorCodes.MissingGoalIdOrCategory }, params),
 } as const;
+
+export const DeleteGoalReqErrorCodes = {
+	GoalNotFound: "GoalNotFound",
+	MissingGoalIdOrCategory: "MissingGoalIdOrCategory"
+} as const;
+
+export const DeleteGoalErrors = {
+	...DefaultReqErrors,
+	...UserRequestErrors,
+	[DeleteGoalReqErrorCodes.GoalNotFound]: (params: {}) => getReqErrWithDefaults({ status: HttpStatusCode.NotFound, errCode: DeleteGoalReqErrorCodes.GoalNotFound }, params),
+	[DeleteGoalReqErrorCodes.MissingGoalIdOrCategory]: (params: {}) => getReqErrWithDefaults({ status: HttpStatusCode.BadRequest, errCode: DeleteGoalReqErrorCodes.MissingGoalIdOrCategory }, params),
+} as const;

@@ -66,6 +66,25 @@ const addGoal: UserModel.InstanceMethods["addGoal"] = async function(this: UserM
 	}
 }
 
+const removeGoal: UserModel.InstanceMethods["removeGoal"] = async function(this: UserModel.Document, goalId: string, goalCategory: TGoalCategory) {
+	try {
+		const goalIndex = this.goals?.[goalCategory]?.findIndex(g => g.id === goalId);
+	
+		if (goalIndex === -1) {
+			return false;
+		}
+	
+		this.goals?.[goalCategory]?.splice(goalIndex, 1);
+	
+		this.markModified("goals");
+		this.save();
+
+		return true;
+	} catch (err) {
+		return false;
+	}
+}
+
 const updateGoal: UserModel.InstanceMethods["updateGoal"] = async function(this: UserModel.Document, goalId: string, category: TGoalCategory, updates: UpdateGoalRequest.TReqBody) {
 	const goalIndex = this.goals?.[category]?.findIndex(g => g.id === goalId);
 
@@ -113,5 +132,6 @@ export const UserMethods: UserModel.InstanceMethods = {
 	addJWTHash,
 	removeJWTHash,
 	addGoal,
-	updateGoal
+	updateGoal,
+	removeGoal
 }

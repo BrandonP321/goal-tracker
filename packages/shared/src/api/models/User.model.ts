@@ -23,7 +23,8 @@ export namespace UserModel {
 		addJWTHash: (hash: string) => Promise<void>;
 		removeJWTHash: (hash: string) => Promise<void>;
 		addGoal: (goal: TGoal) => Promise<TGoal | undefined>;
-		updateGoal: (goalId: string, category: TGoalCategory, updates: UpdateGoalRequest.TReqBody) => Promise<{ foundGoal: boolean, updatedGoal: boolean }>
+		updateGoal: (goalId: string, category: TGoalCategory, updates: UpdateGoalRequest.TReqBody) => Promise<{ foundGoal: boolean, updatedGoal: boolean }>;
+		removeGoal: (goalId: string, category: TGoalCategory) => Promise<boolean>
 	}
 	
 	export type StaticMethods = {
