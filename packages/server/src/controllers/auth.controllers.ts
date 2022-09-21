@@ -91,6 +91,7 @@ export const SignoutUserController: TRouteController<SignoutUserRequest.TRequest
 		const user = res.locals.user;
 	
 		user.jwtHash = {};
+		user.markModified("jwtHash");
 		await user.save();
 
 		JWTUtils.destroyTokenCookie(res);
