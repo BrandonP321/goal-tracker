@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from "./Auth.module.scss";
 import { Loc } from "@goal-tracker/shared/src/utils/LocalizationUtils";
 import { useState } from 'react';
@@ -8,13 +8,22 @@ import { AuthUtils, TLoginFieldId, TRegistrationFieldId } from "@goal-tracker/sh
 import { LoginUserRequest, RegisterUserRequest } from "@goal-tracker/shared/src/api/Requests/Auth/Auth.requests";
 import { AuthLoginReqErrorCodes, AuthRegistrationReqErrorCodes } from '@goal-tracker/shared/src/api/Requests/Auth/AuthRequestErrors';
 import { APIFetcher } from '~Utils/APIFetcher';
-import { FormUtils, TFilledFormFields, TFormFieldErrors } from '@goal-tracker/shared/src/utils/FormUtils';
+import { TFilledFormFields } from '@goal-tracker/shared/src/utils/FormUtils';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '~Store/hooks';
+import { hideLoadingSpinner } from '~Store/slices/PageLoading/PageLoadingSlice';
 
 type AuthProps = {}
 
 export default function Auth(props: AuthProps) {
+	const dispatch = useAppDispatch();
+
 	const [activeForm, setActiveForm] = useState<"login" | "register">("login");
+
+	useEffect(() => {
+		// should always make sure loading spinner is hidden when auth page is loaded in case user is being redirected after re-auth failure
+		dispatch(hideLoadingSpinner());
+	}, [])
 
 	const toggleForm = () => {
 		setActiveForm(activeForm === "login" ? "register" : "login");

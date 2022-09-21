@@ -8,7 +8,6 @@ import { APIFetcher } from "~Utils/APIFetcher";
 export default React.memo(function Navigation() {
 	return (
 		<Router>
-			<AuthValidator/>
 			<React.Suspense fallback={<FallbackComponent />}>
 				<Routes>
 					{RouteDefs.mappedRoutes}
@@ -28,21 +27,6 @@ const FallbackComponent = () => {
 
 		// hide loading spinner when unmounted
 		return () => { dispatch(hideLoadingSpinner()) }
-	}, [])
-
-	return null;
-}
-
-/** Component that sends user to auth page on app load if user is not authed */
-const AuthValidator = () => {
-	const navigate = useNavigate();
-
-	useEffect(() => {
-		// if auth status endpoint returns any error, have user re-auth
-		APIFetcher.CheckAuthStatus({})
-			.catch(() => {
-				navigate("/Auth");
-			})
 	}, [])
 
 	return null;

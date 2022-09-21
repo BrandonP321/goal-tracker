@@ -56,3 +56,5 @@ export const UserRequestErrorCodes = {
 export const UserRequestErrors = {
 	[UserRequestErrorCodes.UserNotFound]: (params: {}) => getReqErrWithDefaults({ status: HttpStatusCode.NotFound, errCode: UserRequestErrorCodes.UserNotFound }, params),
 } as const;
+
+export type TDefaultErrResponse = TRequestErrResponse<typeof DefaultReqErrors>;

@@ -1,6 +1,7 @@
 import { GetUserGoalsRequest } from "@goal-tracker/shared/src/api/Requests/Goal/Goal.requests";
 import { TGoal, TGoalCategory } from "@goal-tracker/shared/src/utils/GoalUtils";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { GoalCard } from "~Components/GoalCard/GoalCard";
 import { GoalCreationModal } from "~Components/GoalCreationModal/GoalCreationModal";
 import { GradientBtn } from "~Components/GradientBtn/GradientBtn";
@@ -20,6 +21,7 @@ const setThrottleWait = (value: boolean) => throttleWait = value;
 
 export const GoalBoard = (props: GoalBoardProps) => {
 	const dispatch = useAppDispatch();
+	const navigate = useNavigate();
 
 	const { errorUpdatingGoal, goals, haveGoalsLoaded } = useUserGoals();
 
@@ -33,8 +35,9 @@ export const GoalBoard = (props: GoalBoardProps) => {
 		APIFetcher.GetUserGoals({}).then(({ data }) => {
 			dispatch(setGoals(data));
 			dispatch(hideLoadingSpinner());
-		}).catch(({ response }: GetUserGoalsRequest.ErrResponse) => {
-		})
+		}).catch(APIError => APIFetcher.ErrHandler<GetUserGoalsRequest.ErrResponse>(APIError, navigate, ((err) => {
+			console.log(err);
+		})))
 	}, [])
 
 	const handleMouseDrag: React.MouseEventHandler<HTMLDivElement> = (e) => {
