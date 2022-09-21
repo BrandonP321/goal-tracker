@@ -38,3 +38,11 @@ export const ReqUserSignoutErrors = {
 	...DefaultReqErrors,
 	...UserRequestErrors,
 } as const;
+
+export const AuthStatusReqErrorCodes = {
+} as const;
+
+export const ReqAuthStatusErrors = {
+	...DefaultReqErrors,
+	...UserRequestErrors,
+} as const;

@@ -1,6 +1,6 @@
 import { TAPIRequest } from "@goal-tracker/shared/src/api/Requests";
-import { LoginUserRequest, RegisterUserRequest } from "@goal-tracker/shared/src/api/Requests/Auth/Auth.requests";
-import { GetUserGoalsRequest, UpdateGoalRequest } from "@goal-tracker/shared/src/api/Requests/Goal/Goal.requests";
+import { AuthStatusRequest, LoginUserRequest, RegisterUserRequest } from "@goal-tracker/shared/src/api/Requests/Auth/Auth.requests";
+import { CreateGoalRequest, GetUserGoalsRequest, UpdateGoalRequest } from "@goal-tracker/shared/src/api/Requests/Goal/Goal.requests";
 import { Routes } from "@goal-tracker/shared/src/api/routes";
 import axios, { AxiosResponse } from "axios";
 
@@ -23,10 +23,12 @@ export class APIFetcher {
 
 	/* AUTH */
 	public static RegisterUser = APIFetcher.post<RegisterUserRequest.TRequest>(Routes.Auth.Register({}));
-	public static LoginUser = APIFetcher.post<LoginUserRequest.TRequest>(Routes.Auth.Login({}))
+	public static LoginUser = APIFetcher.post<LoginUserRequest.TRequest>(Routes.Auth.Login({}));
+	public static CheckAuthStatus = APIFetcher.get<AuthStatusRequest.TRequest>(Routes.Auth.CheckIsUserAuthed({}));
 
 	/* GOALS */
 	public static GetUserGoals = APIFetcher.get<GetUserGoalsRequest.TRequest>(Routes.Goal.GetUserGoals({}));
+	// public static CreateGoal = APIFetcher.post<CreateGoalRequest.TRequest>(Routes.Goal.CreateGoal({}));
 	public static UpdateUserGoal = APIFetcher.put<UpdateGoalRequest.TRequest>(Routes.Goal.UpdateGoal({}));
 }
 

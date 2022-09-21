@@ -2,7 +2,7 @@ import { TAPIRequest, TRequestErrors, TRequestErrResponse } from "..";
 import { TLoginFieldId, TRegistrationFieldId } from "../../../utils/AuthUtils";
 import { UserModel } from "../../models/User.model";
 import { TRouteUrlParams } from "../../routes";
-import { ReqUserLoginErrors, ReqUserRegisterErrors, ReqUserSignoutErrors } from "./AuthRequestErrors";
+import { ReqUserLoginErrors, ReqUserRegisterErrors, ReqUserSignoutErrors, ReqAuthStatusErrors } from "./AuthRequestErrors";
 
 export namespace RegisterUserRequest {
 	export type TUrlParams = TRouteUrlParams<"", "">;
@@ -35,4 +35,15 @@ export namespace SignoutUserRequest {
 
 	export type ErrResponse = TRequestErrResponse<typeof ReqUserSignoutErrors>;
 	export type Errors = TRequestErrors<typeof ReqUserSignoutErrors>;
+}
+
+export namespace AuthStatusRequest {
+	export type TUrlParams = TRouteUrlParams<"", "">;
+	export type TReqBody = {}
+	export type TResBody = {};
+
+	export type TRequest = TAPIRequest<TUrlParams, TReqBody, TResBody>;
+
+	export type ErrResponse = TRequestErrResponse<typeof ReqAuthStatusErrors>;
+	export type Errors = TRequestErrors<typeof ReqAuthStatusErrors>;
 }

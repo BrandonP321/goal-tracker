@@ -1,7 +1,7 @@
 import { UserModel } from "@goal-tracker/shared/src/api/models/User.model";
-import { LoginUserRequest, RegisterUserRequest, ReqUserLoginErrors, ReqUserRegisterErrors, SignoutUserRequest } from "@goal-tracker/shared/src/api/Requests/Auth";
+import { AuthStatusRequest, LoginUserRequest, RegisterUserRequest, ReqUserLoginErrors, ReqUserRegisterErrors, SignoutUserRequest } from "@goal-tracker/shared/src/api/Requests/Auth";
 import { AuthUtils } from "@goal-tracker/shared/src/utils/AuthUtils";
-import { JWTUtils } from "~Utils/JWTUtils";
+import { JWTResLocals, JWTUtils } from "~Utils/JWTUtils";
 import { TRouteController } from ".";
 import { ControllerUtils } from "~Utils/ControllerUtils";
 import { CallbackError } from "mongoose";
@@ -100,4 +100,10 @@ export const SignoutUserController: TRouteController<SignoutUserRequest.TRequest
 		// if error occurred still send error code to client, but it is safe to still consider the user logged out at this point
 		return ControllerUtils.respondWithUnexpectedErr(res);
 	}
+}
+
+/** Checks the auth status of the user */
+export const AuthStatusController: TRouteController<AuthStatusRequest.TRequest, JWTResLocals> = async (req, res) => {
+	// if this controller is being executed, we know the user was authenticated by the auth middleware
+	res.json({}).end();
 }
