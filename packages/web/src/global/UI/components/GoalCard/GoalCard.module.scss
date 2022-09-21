@@ -18,6 +18,7 @@
 }
 
 $toolIconWidth: 2rem;
+$iconHelperTranslate: translate(-50%, calc(-100% - 0.4rem));
 
 .toolbar {
 	display: flex;
@@ -61,6 +62,11 @@ $toolIconWidth: 2rem;
 					color: #fff;
 				}
 			}
+
+			.iconHelper {
+				opacity: 1;
+				transform: $iconHelperTranslate scale(1);
+			}
 		}
 	}
 
@@ -98,5 +104,34 @@ $toolIconWidth: 2rem;
 	&.show {
 		opacity: 1;
 		pointer-events: all;
+	}
+}
+
+.iconHelper {
+	position: absolute;
+	top: 0;
+	left: 50%;
+	font-size: 0.8rem;
+	text-align: center;
+	opacity: 0;
+	pointer-events: none;
+	transform: $iconHelperTranslate scale(0.8);
+	background-color: $bodyBgPrimary;
+	padding: 0.25rem 0.75rem;
+	border-radius: 0.25rem;
+	box-shadow: 0 0 0.5rem 0 rgba(#000, 0.5);
+	transition: all 0.15s;
+
+	&::before {
+		content: "";
+		position: absolute;
+		bottom: 0;
+		left: 50%;
+		transform: translate(-50%, 50%) rotate(45deg);
+		background-color: inherit;
+		width: 0.5rem;
+		height: 0.5rem;
+		border-radius: 0 0 2px 0;
+		z-index: -1;
 	}
 }

@@ -89,18 +89,33 @@ export const GoalCard = (props: GoalCardProps) => {
 		<div className={styles.goalCard} onMouseDown={onMouseDown}>
 			<div className={styles.toolbar}>
 				<div className={styles.toolIconWrapper} onClick={toggleMoveDropdownVisibility}>
+					<GoalCardIconTooltip>Move</GoalCardIconTooltip>
 					<FontAwesomeIcon icon={faArrowTurnDownRight} className={classNames(styles.toolIcon, styles.arrow)} />
 					<DropdownMenu options={moveDropdownOptions} classes={{ root: classNames(styles.goalMoveDropdown, showMoveDropdown && styles.show) }} />
 				</div>
 				<div className={styles.toolIconWrapper} onClick={handleDeleteIconClick}>
+					<GoalCardIconTooltip>Delete</GoalCardIconTooltip>
 					<FontAwesomeIcon icon={faTrash} className={classNames(styles.toolIcon, styles.trash)} />
 				</div>
 				<div className={styles.toolIconWrapper} onClick={handleCompletionIconClick}>
+					<GoalCardIconTooltip>{isComplete ? "Complete" : "Incomplete"}</GoalCardIconTooltip>
 					<FontAwesomeIcon icon={faCheckDouble} className={classNames(styles.toolIcon, styles.check, isComplete && styles.complete)} />
 				</div>
 			</div>
 			<p className={styles.cardTitle}>{title}</p>
 			<p className={styles.cardBlurb}>{notes}</p>
+		</div>
+	)
+}
+
+type GoalCardIconTooltipProps = {
+	children: React.ReactNode;
+}
+
+const GoalCardIconTooltip = (props: GoalCardIconTooltipProps) => {
+	return (
+		<div className={styles.iconHelper}>
+			{props.children}
 		</div>
 	)
 }
