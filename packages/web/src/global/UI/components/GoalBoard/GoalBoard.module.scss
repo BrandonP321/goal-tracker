@@ -28,7 +28,7 @@
 		min-width: calc(100vw - 2rem);
 	}
 
-	&:not(:nth-last-child(2)) {
+	&:not(:nth-last-child(3)) {
 		margin-right: 5rem;
 
 		@include mobileVW() {
@@ -76,6 +76,11 @@
 		padding: 1rem;
 		background: $gradientBgDark;
 		box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 1);
+
+		@include mobileVW() {
+			font-size: 1.5rem;
+			padding: 0.75rem 1rem;
+		}
 	}
 
 	.listGoals {
@@ -87,9 +92,17 @@
 		height: 100%;
 		padding: 1rem;
 		overflow-y: auto;
+
+		@include mobileVW() {
+			padding: 1rem 0.5rem;
+		}
 	}
 }
 
 .createBtn {
 	user-select: none;
+
+	@include mobileVW() {
+		padding: 1rem 0.5rem;
+	}
 }
