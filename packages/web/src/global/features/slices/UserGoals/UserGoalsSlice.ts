@@ -26,6 +26,9 @@ const userGoalsSlice = createSlice({
         }
         state.haveGoalsLoaded = true;
 		  },
+      addGoal: (state, action: PayloadAction<TGoal>) => {
+        state.goals?.[action.payload.category]?.unshift(action.payload);
+      },
       moveGoal: (state, action: PayloadAction<{goalId: string; currentCategory: TGoalCategory; newCategory: TGoalCategory}>) => {
         const listForRemoval = state.goals?.[action.payload.currentCategory];
         const listForAddition = state.goals?.[action.payload.newCategory];
@@ -49,5 +52,5 @@ const userGoalsSlice = createSlice({
     }
 });
 
-export const { setGoals, moveGoal } = userGoalsSlice.actions;
+export const { setGoals, moveGoal, addGoal } = userGoalsSlice.actions;
 export default userGoalsSlice.reducer;

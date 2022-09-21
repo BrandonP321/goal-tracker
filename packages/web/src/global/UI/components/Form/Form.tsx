@@ -1,6 +1,6 @@
 import { FormUtils, TFilledFormFields, TFormFieldErrors } from "@goal-tracker/shared/src/utils/FormUtils";
 import classNames from "classnames";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ClassesProp } from "~Utils/Helpers";
 import styles from "./Form.module.scss";
 
@@ -19,11 +19,12 @@ export type FormProps = {
 	setValidationErrors: ReturnType<typeof useFormValidationErrors>[1];
 	children?: React.ReactNode;
 	classes?: ClassesProp<"root">;
+	inputRef?: React.MutableRefObject<HTMLFormElement | null>;
 }
 
 export const Form = (props: FormProps) => {
 	const {
-		onSubmit, validateFields, setValidationErrors, children, classes
+		onSubmit, validateFields, setValidationErrors, children, classes, inputRef
 	} = props;
 
 	const handleFormSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
@@ -44,7 +45,7 @@ export const Form = (props: FormProps) => {
 	}
 
 	return (
-		<form className={classes?.root} onSubmit={handleFormSubmit} autoComplete="on" noValidate>
+		<form className={classes?.root} onReset={() => alert("reset")} ref={inputRef} onSubmit={handleFormSubmit} autoComplete="on" noValidate>
 			{children}
 		</form>
 	)
@@ -78,6 +79,7 @@ type FormField<T extends TFormFieldTypes, TValidFieldId extends string = string>
 	id: TValidFieldId;
 	name: TValidFieldId;
 	errMsg?: string | null;
+	formRef?: React.MutableRefObject<HTMLFormElement | null>;
 }
 
 export type TValidFormField<TValidFieldId extends string = string> = FormTextInputFieldProps<TValidFieldId> | FormTextareaProps<TValidFieldId> | RadioFormFieldProps<TValidFieldId>;
@@ -87,21 +89,26 @@ export type FormTextInputFieldProps<TValidFieldId extends string = string> = For
 	inputType?: "text" | "email" | "password" | "tel" | "url";
 	required?: boolean;
 	autoComplete?: boolean;
-	classes?: ClassesProp<"root" | "fieldWrapper" | "input" | "placeholder" | "errMsg">
+	classes?: ClassesProp<"root" | "fieldWrapper" | "input" | "placeholder" | "errMsg">;
 }
 
 export const FormTextInputField = (props: FormTextInputFieldProps) => {
 	const {
-		id, classes, inputType, type, autoComplete, placeholder, errMsg, ...rest
+		id, classes, inputType, type, autoComplete, placeholder, errMsg, formRef, ...rest
 	} = props;
 
 	const [value, setValue] = useState("");
 	const [isFocused, setIsFocused] = useState(false);
 
+	useEffect(() => {
+		formRef?.current?.addEventListener("reset", () => setValue(""))
+	}, [])
+
 	return (
 		<FormFieldWrapper errMsg={errMsg} inputHasValue={!!value} inputId={id} isFocused={isFocused} placeholder={placeholder} classes={classes}>
 			<input {...rest}
 				id={id}
+				onReset={() => alert("rest")}
 				className={classNames(styles.formInput, classes?.input)}
 				type={inputType}
 				autoComplete={autoComplete ? "on" : "off"}
@@ -121,11 +128,15 @@ export type FormTextareaProps<TValidFieldId extends string = string> = FormField
 
 export const FormTextareaField = (props: FormTextareaProps) => {
 	const {
-		id, classes, type, placeholder, errMsg, ...rest
+		id, classes, type, placeholder, errMsg, formRef, ...rest
 	} = props;
 
 	const [value, setValue] = useState("");
 	const [isFocused, setIsFocused] = useState(false);
+
+	useEffect(() => {
+		formRef?.current?.addEventListener("reset", () => setValue(""))
+	}, [])
 
 	return (
 		<FormFieldWrapper errMsg={errMsg} inputHasValue={!!value} inputId={id} isFocused={isFocused} placeholder={placeholder} classes={classes}>
@@ -170,7 +181,7 @@ type RadioFormFieldProps<TValidFieldId extends string = string> = FormField<"Rad
 }
 
 const RadioFormField = (props: RadioFormFieldProps) => {
-	const { id, name, options, type, errMsg, title, defaultValue } = props;
+	const { id, name, options, type, errMsg, title, defaultValue, formRef } = props;
 
 	return (
 		<div className={styles.radioSectionWrapper}>
