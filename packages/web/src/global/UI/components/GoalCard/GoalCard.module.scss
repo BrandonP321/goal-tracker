@@ -20,6 +20,8 @@
 $toolIconWidth: 2rem;
 
 .toolbar {
+	display: flex;
+	justify-content: flex-end;
 
 	.toolIconWrapper {
 		position: relative;
@@ -53,7 +55,11 @@ $toolIconWidth: 2rem;
 			}
 
 			.toolIcon {
-				color: rgba($textDark, 1);
+				color: rgba(#000, 1);
+
+				&.check.complete {
+					color: #fff;
+				}
 			}
 		}
 	}
@@ -63,6 +69,10 @@ $toolIconWidth: 2rem;
 		color: rgba($textDark, 0.8);
 		font-size: 1rem;
 		transition: all 0.25s;
+
+		&.check.complete {
+			color: $colorAccentTertiary;
+		}
 	}
 }
 
@@ -79,7 +89,7 @@ $toolIconWidth: 2rem;
 .goalMoveDropdown {
 	position: absolute;
 	top: 0;
-	left: 130%;
+	right: 130%;
 	opacity: 0;
 	box-shadow: 0 0 1rem rgba(0, 0, 0, 0.75);
 	pointer-events: none;
