@@ -1,8 +1,9 @@
-import { TAPIRequest } from "@goal-tracker/shared/src/api/Requests";
+import { DefaultRequestErrorCodes, TAPIRequest, TDefaultErrResponse } from "@goal-tracker/shared/src/api/Requests";
 import { AuthStatusRequest, LoginUserRequest, RegisterUserRequest } from "@goal-tracker/shared/src/api/Requests/Auth/Auth.requests";
 import { CreateGoalRequest, GetUserGoalsRequest, UpdateGoalRequest } from "@goal-tracker/shared/src/api/Requests/Goal/Goal.requests";
 import { Routes } from "@goal-tracker/shared/src/api/routes";
 import axios, { AxiosResponse } from "axios";
+import { NavigateFunction } from "react-router-dom";
 
 type AxiosRequest<T extends TAPIRequest = TAPIRequest> = (data: T["ReqBody"]) => Promise<AxiosResponse<T["ResBody"]>>
 
@@ -30,5 +31,26 @@ export class APIFetcher {
 	public static GetUserGoals = APIFetcher.get<GetUserGoalsRequest.TRequest>(Routes.Goal.GetUserGoals({}));
 	// public static CreateGoal = APIFetcher.post<CreateGoalRequest.TRequest>(Routes.Goal.CreateGoal({}));
 	public static UpdateUserGoal = APIFetcher.put<UpdateGoalRequest.TRequest>(Routes.Goal.UpdateGoal({}));
+
+	/** Handles default API error codes before executing a callback to handle any other errors */
+	public static ErrHandler = <T extends TDefaultErrResponse>(apiErr: any, navigate: NavigateFunction, cb: (err: Required<T>["response"]) => void) => {
+		const err = apiErr?.response?.data;
+
+		// if no error or errCode was sent in error response, an error has occurred connecting with the server
+		if (!err || !err.errCode) {
+			return alert("Unable to connect to server.");
+		}
+
+		// handle default api error codes
+		switch (err.errCode) {
+			case DefaultRequestErrorCodes.UnexpectedCondition:
+				return alert("An unexpected error has occurred.  Please refresh this page.")
+			case DefaultRequestErrorCodes.UserMustReAuth:
+				return navigate("/Auth");
+		}
+
+		// if no default errors had to be handled, execute callback
+		return cb(apiErr.response);
+	}
 }
 
