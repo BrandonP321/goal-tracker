@@ -27,6 +27,12 @@ input:-webkit-autofill:active {
 
 }
 
+html,
+body,
+#root {
+	height: 100%;
+}
+
 html {
     color: $textPrimary;
 }
@@ -41,5 +47,5 @@ html[data-scroll-locked="true"] {
 
 body {
 	background-color: $bodyBgPrimary;
-    min-height: 100vh;
+    min-height: 100%;
 }
