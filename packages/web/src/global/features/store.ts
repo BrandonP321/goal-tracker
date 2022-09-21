@@ -4,6 +4,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import responsiveReducer from "~Store/slices/Responsive/ResponsiveSlice";
 import pageLoadingReducer from "~Store/slices/PageLoading/PageLoadingSlice";
 import userGoalsReducer from "~Store/slices/UserGoals/UserGoalsSlice";
+import userReducer from "~Store/slices/User/UserSlice";
 
 /* Returns the type of a redux store with a given slice; for anootating type of store parameters in functions/classes */
 export type ReduxStoreWithSlice<SliceState = {}> = EnhancedStore<{
@@ -17,7 +18,8 @@ export const store = configureStore({
 	reducer: {
 		responsive: responsiveReducer,
 		pageLoading: pageLoadingReducer,
-		userGoals: userGoalsReducer
+		userGoals: userGoalsReducer,
+		user: userReducer
 	}
 })
 

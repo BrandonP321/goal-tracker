@@ -5,7 +5,10 @@ import bcrypt from "bcrypt";
 
 const toFullJSON: UserModel.InstanceMethods["toFullJSON"] = async function(this: UserModel.Document) {
 	// flatten user JSON and remove sensitive fields
-	return removeSensitiveData(this.toJSON());
+	const userJSON = this.toJSON();
+	userJSON.id = this.id;
+	
+	return removeSensitiveData(userJSON);
 }
 
 

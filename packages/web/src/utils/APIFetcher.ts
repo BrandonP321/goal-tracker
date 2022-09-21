@@ -1,6 +1,7 @@
 import { DefaultRequestErrorCodes, TAPIRequest, TDefaultErrResponse } from "@goal-tracker/shared/src/api/Requests";
-import { AuthStatusRequest, LoginUserRequest, RegisterUserRequest } from "@goal-tracker/shared/src/api/Requests/Auth/Auth.requests";
+import { AuthStatusRequest, LoginUserRequest, RegisterUserRequest, SignoutUserRequest } from "@goal-tracker/shared/src/api/Requests/Auth/Auth.requests";
 import { CreateGoalRequest, DeleteGoalRequest, GetUserGoalsRequest, UpdateGoalRequest } from "@goal-tracker/shared/src/api/Requests/Goal/Goal.requests";
+import { GetFullUserRequest } from "@goal-tracker/shared/src/api/Requests/User/User.requests";
 import { Routes } from "@goal-tracker/shared/src/api/routes";
 import axios, { AxiosResponse } from "axios";
 import { NavigateFunction } from "react-router-dom";
@@ -31,12 +32,16 @@ export class APIFetcher {
 	public static RegisterUser = APIFetcher.post<RegisterUserRequest.TRequest>(Routes.Auth.Register({}));
 	public static LoginUser = APIFetcher.post<LoginUserRequest.TRequest>(Routes.Auth.Login({}));
 	public static CheckAuthStatus = APIFetcher.get<AuthStatusRequest.TRequest>(Routes.Auth.CheckIsUserAuthed({}));
+	public static LogoutUser = APIFetcher.post<SignoutUserRequest.TRequest>(Routes.Auth.Signout({}));
 
 	/* GOALS */
 	public static GetUserGoals = APIFetcher.get<GetUserGoalsRequest.TRequest>(Routes.Goal.GetUserGoals({}));
 	public static CreateGoal = APIFetcher.post<CreateGoalRequest.TRequest>(Routes.Goal.CreateGoal({}));
 	public static UpdateUserGoal = APIFetcher.put<UpdateGoalRequest.TRequest>(Routes.Goal.UpdateGoal({}));
 	public static DeleteGoal = APIFetcher.delete<DeleteGoalRequest.TRequest>(Routes.Goal.DeleteGoal);
+	
+	/* USER */
+	public static GetFullUser = APIFetcher.get<GetFullUserRequest.TRequest>(Routes.User.GetFullUser({}));
 
 	/** Handles default API error codes before executing a callback to handle any other errors */
 	public static ErrHandler = <T extends TDefaultErrResponse>(apiErr: any, navigate: NavigateFunction, cb: (err: Required<T>["response"]) => void) => {

@@ -8,6 +8,7 @@ import { GoalUpdateModal } from "~Components/GoalUpdateModal/GoalUpdateModal";
 import { GradientBtn } from "~Components/GradientBtn/GradientBtn";
 import { useAppDispatch, useResponsive, useUserGoals } from "~Store/hooks";
 import { hideLoadingSpinner, showLoadingSpinner } from "~Store/slices/PageLoading/PageLoadingSlice";
+import { setUser } from "~Store/slices/User/UserSlice";
 import { setGoals } from "~Store/slices/UserGoals/UserGoalsSlice";
 import { APIFetcher } from "~Utils/APIFetcher";
 import { throttle } from "~Utils/Helpers";
@@ -46,8 +47,9 @@ export const GoalBoard = (props: GoalBoardProps) => {
 	useEffect(() => {
 		dispatch(showLoadingSpinner());
 
-		APIFetcher.GetUserGoals({}).then(({ data }) => {
-			dispatch(setGoals(data));
+		APIFetcher.GetFullUser({}).then(({ data: { username, id, goals } }) => {
+			dispatch(setGoals(goals));
+			dispatch(setUser({ username, id }));
 			dispatch(hideLoadingSpinner());
 		}).catch(APIError => APIFetcher.ErrHandler<GetUserGoalsRequest.ErrResponse>(APIError, navigate, ((err) => {
 			console.log(err);

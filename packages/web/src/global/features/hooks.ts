@@ -21,3 +21,5 @@ export const useResponsive: TResponsiveHookOverload = (breakpoint?: keyof Respon
 export const usePageLoading = () => useAppSelector(state => state.pageLoading.loading);
 
 export const useUserGoals = () => useAppSelector(state => state.userGoals);
+
+export const useUser = () => useAppSelector(state => state.user);
