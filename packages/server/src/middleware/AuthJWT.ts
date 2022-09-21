@@ -54,10 +54,14 @@ const refreshTokens = async (aTokenHash: string, rTokenHash: string, userId: str
 		const user = await db.User.findById(userId);
 
 		const isRefreshAllowed = user && (aTokenHash === rTokenHash) && user.jwtHash?.[rTokenHash];
+	
+		if (!isRefreshAllowed) {
+			return false;
+		}
 
 		const { tokenHashId, tokens: newTokens } = await JWTUtils.generateAndStoreTokens(userId, res);
 
-		if (!isRefreshAllowed || !newTokens) {
+		if (!newTokens) {
 			return false;
 		}
 	

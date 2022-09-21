@@ -24,22 +24,28 @@ export class JWTUtils {
 
 	/** Stores access & refresh tokens in http secured cookies */
 	public static generateTokenCookies = (tokens: TAuthTokens, res: Response) => {
+		const maxAgeSeconds = parseInt(ENVUtils.Vars.REFRESH_TOKEN_EXPIRES_IN.split("s")[0]);
+		const maxAgeMs = maxAgeSeconds && (maxAgeSeconds * 1000);
+
 		res.cookie(authTokenCookieName, JSON.stringify(tokens), {
 			secure: ENVUtils.isLiveEnv,
 			httpOnly: true,
 			sameSite: ENVUtils.isLiveEnv ? "none" : "lax",
 			// max age should be equivalent to the life span of a refresh token
-			maxAge: parseInt(ENVUtils.Vars.REFRESH_TOKEN_EXPIRES_IN.split("s")[0])
+			maxAge: maxAgeMs
 		})
 	}
 
+	/** Gets JWT auth cookie, returning undefined if no cookie exists */
 	public static getTokensFromCookie = (req: Request) => {
-		const cookie: undefined | TAuthTokens = JSON.parse(req.cookies?.[authTokenCookieName]);
+		const cookie: undefined | string = req.cookies?.[authTokenCookieName];
+		const parsedCookie: undefined | TAuthTokens = cookie && JSON.parse(cookie);
 
-		return cookie;
+		return parsedCookie;
 	}
 
 	public static destroyTokenCookie = (res: Response) => {
+		console.log("destroy cookie");
 		res.clearCookie(authTokenCookieName);
 	}
 
