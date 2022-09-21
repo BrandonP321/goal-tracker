@@ -45,7 +45,7 @@ export const Form = (props: FormProps) => {
 	}
 
 	return (
-		<form className={classes?.root} onReset={() => alert("reset")} ref={inputRef} onSubmit={handleFormSubmit} autoComplete="on" noValidate>
+		<form className={classes?.root} ref={inputRef} onSubmit={handleFormSubmit} autoComplete="on" noValidate>
 			{children}
 		</form>
 	)
@@ -108,7 +108,6 @@ export const FormTextInputField = (props: FormTextInputFieldProps) => {
 		<FormFieldWrapper errMsg={errMsg} inputHasValue={!!value} inputId={id} isFocused={isFocused} placeholder={placeholder} classes={classes}>
 			<input {...rest}
 				id={id}
-				onReset={() => alert("rest")}
 				className={classNames(styles.formInput, classes?.input)}
 				type={inputType}
 				autoComplete={autoComplete ? "on" : "off"}
