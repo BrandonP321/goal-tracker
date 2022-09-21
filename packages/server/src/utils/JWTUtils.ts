@@ -45,8 +45,7 @@ export class JWTUtils {
 	}
 
 	public static destroyTokenCookie = (res: Response) => {
-		console.log("destroy cookie");
-		res.clearCookie(authTokenCookieName);
+		res.clearCookie(authTokenCookieName, { maxAge: 0 });
 	}
 
 	/** Returns access & refresh tokens */
