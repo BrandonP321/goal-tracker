@@ -27,6 +27,7 @@
 
 	@include mobileVW() {
 		min-width: calc(100vw - 2rem);
+		border-radius: 0.5rem;
 	}
 
 	&:not(:nth-last-child(3)) {
@@ -76,11 +77,14 @@
 		align-items: center;
 		padding: 1rem;
 		background: $gradientBgDark;
-		box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 1);
+		box-shadow: 0 1rem 1rem -1rem rgba(0, 0, 0, 1);
+		z-index: 10;
+		border-radius: 1rem 1rem 0 0;
 
 		@include mobileVW() {
 			font-size: 1.5rem;
 			padding: 0.75rem 1rem;
+			border-radius: 0.5rem 0.5rem 0 0;
 		}
 	}
 
@@ -102,6 +106,11 @@
 
 .createBtn {
 	user-select: none;
+	box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.25);
+
+	&:hover {
+		box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.25);
+	}
 
 	@include mobileVW() {
 		padding: 1rem 0.5rem;
