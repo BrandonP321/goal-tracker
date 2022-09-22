@@ -28,9 +28,7 @@ export class JWTUtils {
 		const maxAgeMs = maxAgeSeconds && (maxAgeSeconds * 1000);
 
 		res.cookie(authTokenCookieName, JSON.stringify(tokens), {
-			secure: ENVUtils.isLiveEnv,
 			httpOnly: true,
-			sameSite: ENVUtils.isLiveEnv ? "none" : "lax",
 			// max age should be equivalent to the life span of a refresh token
 			maxAge: maxAgeMs
 		})
@@ -46,9 +44,7 @@ export class JWTUtils {
 
 	public static destroyTokenCookie = (res: Response) => {
 		res.clearCookie(authTokenCookieName, {	
-			secure: ENVUtils.isLiveEnv,
 			httpOnly: true,
-			sameSite: ENVUtils.isLiveEnv ? "none" : "lax",
 		});
 	}
 
