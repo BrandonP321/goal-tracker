@@ -29,8 +29,10 @@ export class JWTUtils {
 
 		res.cookie(authTokenCookieName, JSON.stringify(tokens), {
 			httpOnly: true,
+			secure: true,
 			// max age should be equivalent to the life span of a refresh token
-			maxAge: maxAgeMs
+			maxAge: maxAgeMs,
+			sameSite: true
 		})
 	}
 
@@ -45,6 +47,8 @@ export class JWTUtils {
 	public static destroyTokenCookie = (res: Response) => {
 		res.clearCookie(authTokenCookieName, {	
 			httpOnly: true,
+			secure: true,
+			sameSite: true
 		});
 	}
 
