@@ -34,6 +34,9 @@ export const AuthJwt: TRouteController<TAPIRequest<{}, {}, {}>, JWTResLocals> = 
 			if (!areTokensRefreshed) {
 				return haveUserReAuth(res, "Unable to refresh tokens");
 			}
+		} else {
+			// else make sure authorization header is not included in resonse
+			res.setHeader("authorization", "");
 		}
 	
 		// make user's id accessible to other controllers
