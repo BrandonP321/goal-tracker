@@ -54,11 +54,11 @@ export const GoalCreationModal = (props: GoalCreationModalProps) => {
 	const handleSubmit: FormSubmissionHandler<TGoalCreationFieldId> = (formData, setErrors) => {
 		setIsLoading(true);
 
-		APIFetcher.CreateGoal(formData as TFilledFormFields<TGoalCreationFieldId> & { category: TGoalCategory }).then(res => {
+		APIFetcher.CreateGoal(formData as TFilledFormFields<TGoalCreationFieldId> & { category: TGoalCategory }).then((res) => APIFetcher.ResponseHandler(res, () => {
 			dispatch(addGoal(res.data));
 			formRef.current?.reset();
 			hide();
-		}).catch(errResponse => APIFetcher.ErrHandler<CreateGoalRequest.ErrResponse>(errResponse, navigate, ({ data: err }) => {
+		})).catch(errResponse => APIFetcher.ErrHandler<CreateGoalRequest.ErrResponse>(errResponse, navigate, ({ data: err }) => {
 			switch (err.errCode) {
 				case CreateGoalReqErrorCodes.InvalidFieldInput:
 					const invalidFieldErr = err as CreateGoalRequest.Errors["InvalidFieldInput"];

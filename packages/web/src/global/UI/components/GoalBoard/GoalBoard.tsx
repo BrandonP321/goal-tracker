@@ -47,13 +47,15 @@ export const GoalBoard = (props: GoalBoardProps) => {
 	useEffect(() => {
 		dispatch(showLoadingSpinner());
 
-		APIFetcher.GetFullUser({}).then(({ data: { username, id, goals } }) => {
+		APIFetcher.GetFullUser({}).then((res) => APIFetcher.ResponseHandler(res, () => {
+			const { goals, username, id } = res.data;
+
 			dispatch(setGoals(goals));
 			dispatch(setUser({ username, id }));
 			dispatch(hideLoadingSpinner());
-		}).catch(APIError => APIFetcher.ErrHandler<GetUserGoalsRequest.ErrResponse>(APIError, navigate, ((err) => {
-			console.log(err);
-		})))
+		})).catch(APIError => {
+			APIFetcher.ErrHandler<GetUserGoalsRequest.ErrResponse>(APIError, navigate, ((err) => {
+		}))})
 	}, [])
 
 	const handleMouseDrag: React.MouseEventHandler<HTMLDivElement> = (e) => {

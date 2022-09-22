@@ -34,11 +34,11 @@ export const GoalCard = (props: GoalCardProps) => {
 				dispatch(moveGoal({ currentCategory: category, goalId: id, newCategory: cat }))
 				setShowMoveDropdown(false);
 
-				APIFetcher.UpdateUserGoal({ goalId: id, goalCategory: category, category: cat }).then(res => {
+				APIFetcher.UpdateUserGoal({ goalId: id, goalCategory: category, category: cat }).then((res) => APIFetcher.ResponseHandler(res, () => {
 					console.log(res.data);
-				}).catch(({ data }) => {
-					console.log(data);
-				})
+				})).catch((errResponse) => APIFetcher.ErrHandler<UpdateGoalRequest.ErrResponse>(errResponse, navigate, ({ data: err }) => {
+					console.log(err);
+				}))
 			},
 		})));
 
@@ -63,8 +63,8 @@ export const GoalCard = (props: GoalCardProps) => {
 		dispatch(removeGoal({ category, id, isComplete, notes, title }));
 
 		APIFetcher.DeleteGoal({ goalIdURI: encodeURIComponent(id), goalCategoryURI: encodeURIComponent(category) })
+			.then(res => APIFetcher.ResponseHandler(res))
 			.catch((errResponse) => APIFetcher.ErrHandler<DeleteGoalRequest.ErrResponse>(errResponse, navigate, ({ data: err }) => {
-				console.log(err);
 				switch (err.errCode) {
 					case DeleteGoalReqErrorCodes.GoalNotFound:
 					case DeleteGoalReqErrorCodes.MissingGoalIdOrCategory:
@@ -82,14 +82,16 @@ export const GoalCard = (props: GoalCardProps) => {
 			isComplete: isComplete ? "false" : "true",
 			goalCategory: category,
 			goalId: id
-		}).catch((errResponse) => APIFetcher.ErrHandler<UpdateGoalRequest.ErrResponse>(errResponse, navigate, ({ data: err }) => {
-			switch (err.errCode) {
-				case UpdateGoalReqErrorCodes.GoalNotFound:
-				case UpdateGoalReqErrorCodes.InvalidFieldInput:
-				case UpdateGoalReqErrorCodes.MissingGoalIdOrCategory:
-					break;
-			}
-		}))
+		})
+			.then((res) => APIFetcher.ResponseHandler(res))
+			.catch((errResponse) => APIFetcher.ErrHandler<UpdateGoalRequest.ErrResponse>(errResponse, navigate, ({ data: err }) => {
+				switch (err.errCode) {
+					case UpdateGoalReqErrorCodes.GoalNotFound:
+					case UpdateGoalReqErrorCodes.InvalidFieldInput:
+					case UpdateGoalReqErrorCodes.MissingGoalIdOrCategory:
+						break;
+				}
+			}))
 	}
 
 	const handleClick = () => {

@@ -12,7 +12,7 @@ const haveUserReAuth = (res: Response, errMsg?: string) => {
 /** Middleware for protected API endpoints.  Authenticates user via JWTs stored in cookies */
 export const AuthJwt: TRouteController<TAPIRequest<{}, {}, {}>, JWTResLocals> = async (req, res, next) => {
 	try {
-		const authTokens = JWTUtils.getTokensFromCookie(req);
+		const authTokens = JWTUtils.getTokensFromHeader(req);
 	
 		// if no tokens found, have user re-auth
 		if (!authTokens) {
@@ -59,7 +59,7 @@ const refreshTokens = async (aTokenHash: string, rTokenHash: string, userId: str
 			return false;
 		}
 
-		const { tokenHashId, tokens: newTokens } = await JWTUtils.generateAndStoreTokens(userId, res);
+		const { tokenHashId, tokens: newTokens } = await JWTUtils.generateAndSetTokens(userId, res);
 
 		if (!newTokens) {
 			return false;

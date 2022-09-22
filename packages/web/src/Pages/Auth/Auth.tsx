@@ -99,9 +99,10 @@ const LoginForm = (props: TFormProps) => {
 	const handleSubmit: FormSubmissionHandler<TLoginFieldId> = (formData, setErrors) => {
 		setIsLoading(true);
 
-		APIFetcher.LoginUser(formData).then(({ data }) => {
+		APIFetcher.LoginUser(formData).then((res) => APIFetcher.ResponseHandler(res, () => {
+			console.log(res);
 			navigate("/Dashboard");
-		}).catch(({response}: LoginUserRequest.ErrResponse) => {
+		})).catch(({response}: LoginUserRequest.ErrResponse) => {
 			setIsLoading(false);
 
 			const err = response?.data;
@@ -146,9 +147,9 @@ const RegisterForm = (props: TFormProps) => {
 	const handleSubmit: FormSubmissionHandler<TRegistrationFieldId> = (formData, setErrors) => {
 		setIsLoading(true);
 
-		APIFetcher.RegisterUser(formData).then(({ data }) => {
+		APIFetcher.RegisterUser(formData).then((res) => APIFetcher.ResponseHandler(res, () => {
 			navigate("/Dashboard");
-		}).catch(({ response }: RegisterUserRequest.ErrResponse) => {
+		})).catch(({ response }: RegisterUserRequest.ErrResponse) => {
 			setIsLoading(false);
 
 			const err = response?.data;

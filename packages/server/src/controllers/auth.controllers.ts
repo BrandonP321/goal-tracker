@@ -41,7 +41,7 @@ export const RegisterUserController: TRouteController<RegisterUserRequest.TReque
 			return ControllerUtils.respondWithUnexpectedErr(res, "Unable to create new user");
 		}
 
-		const { tokens } = await JWTUtils.generateAndStoreTokens(user.id, res, newTokenHash);
+		const { tokens } = await JWTUtils.generateAndSetTokens(user.id, res, newTokenHash);
 
 		if (!tokens) {
 			return ControllerUtils.respondWithUnexpectedErr(res, "Unable to generate auth tokens to create new user")
@@ -71,7 +71,7 @@ export const LoginUserController: TRouteController<LoginUserRequest.TRequest, {}
 			return ControllerUtils.respondWithErr(ReqUserLoginErrors.IncorrectEmailOrPassword({}), res);
 		}
 
-		const { tokenHashId, tokens } = await JWTUtils.generateAndStoreTokens(user.id, res);
+		const { tokenHashId, tokens } = await JWTUtils.generateAndSetTokens(user.id, res);
 
 		if (!tokens) {
 			return ControllerUtils.respondWithUnexpectedErr(res, "Unable to generate auth tokens to login")
@@ -93,8 +93,6 @@ export const SignoutUserController: TRouteController<SignoutUserRequest.TRequest
 		user.jwtHash = {};
 		user.markModified("jwtHash");
 		await user.save();
-
-		JWTUtils.destroyTokenCookie(res);
 
 		res.json({}).end();
 	} catch (err) {

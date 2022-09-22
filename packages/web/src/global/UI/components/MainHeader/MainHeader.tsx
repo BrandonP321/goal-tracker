@@ -18,6 +18,7 @@ export default function MainHeader({ }: MainHeaderProps) {
 		setIsLoggingOut(true);
 		APIFetcher.LogoutUser({}).finally(() => {
 			setIsLoggingOut(false);
+			localStorage.removeItem("authTokens");
 			navigate("/Auth");
 		})
 	}

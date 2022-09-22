@@ -46,10 +46,10 @@ export const GoalUpdateModal = (props: GoalUpdateModalProps) => {
 
 		const formDataWithCategory = formData as TFilledFormFields<TGoalUpdateFieldId> & { category: TGoalCategory };
 
-		APIFetcher.UpdateUserGoal({...formDataWithCategory, goalCategory: category, goalId: id}).then(res => {
+		APIFetcher.UpdateUserGoal({...formDataWithCategory, goalCategory: category, goalId: id}).then((res) => APIFetcher.ResponseHandler(res, () => {
 			dispatch(updateGoal({...formDataWithCategory, id, isComplete, category}));
 			hide();
-		}).catch(errResponse => APIFetcher.ErrHandler<UpdateGoalRequest.ErrResponse>(errResponse, navigate, ({ data: err }) => {
+		})).catch(errResponse => APIFetcher.ErrHandler<UpdateGoalRequest.ErrResponse>(errResponse, navigate, ({ data: err }) => {
 			switch (err.errCode) {
 				case UpdateGoalReqErrorCodes.InvalidFieldInput:
 					const invalidFieldErr = err as UpdateGoalRequest.Errors["InvalidFieldInput"];

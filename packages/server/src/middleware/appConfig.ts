@@ -11,6 +11,7 @@ export const configureApp = (app: Express) => {
 	app.use(cors({
 		origin: process.env.CORS_ORIGIN,
 		credentials: true,
+		exposedHeaders: "authorization"
 	}));
 
 	app.use(function (req, res, next) {
