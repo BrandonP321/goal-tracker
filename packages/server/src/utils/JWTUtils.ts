@@ -45,7 +45,11 @@ export class JWTUtils {
 	}
 
 	public static destroyTokenCookie = (res: Response) => {
-		res.clearCookie(authTokenCookieName, { maxAge: 0 });
+		res.clearCookie(authTokenCookieName, {	
+			secure: ENVUtils.isLiveEnv,
+			httpOnly: true,
+			sameSite: ENVUtils.isLiveEnv ? "none" : "lax",
+		});
 	}
 
 	/** Returns access & refresh tokens */
