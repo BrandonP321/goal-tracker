@@ -60,14 +60,9 @@ const removeJWTHash: UserModel.InstanceMethods["removeJWTHash"] = async function
 /** See {@link UserModel.InstanceMethods.addGoal} */
 const addGoal: UserModel.InstanceMethods["addGoal"] = async function(this: UserModel.Document, goal: TGoal) {
 	try {
-		// TODO: just push new goal to goal list and mark "goals" as modified
-		this.goals = {
-			...(this.goals ?? {}),
-			[goal.category]: [
-				goal,
-				...(this.goals[goal.category] ?? []),
-			]
-		} as UserModel.User["goals"]
+		this.goals?.[goal.category]?.unshift(goal);
+
+		this.markModified("goals");
 		await this.save();
 
 		return goal;
