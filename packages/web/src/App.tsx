@@ -5,6 +5,7 @@ import Navigation from "~Navigation/Navigation";
 import { useEffect } from 'react';
 import { ReduxUtils } from '~Utils/ReduxUtils';
 import LoadingWrapper from '~Components/LoadingWrapper/LoadingWrapper';
+import { PageHelmet } from '~FeatureComponents/PageHelmet/PageHelmet';
 
 function App() {
   useEffect(() => {
@@ -15,6 +16,7 @@ function App() {
 
   return (
     <>
+      <PageHelmet/>
       <LoadingWrapper />
       <Navigation />
     </>

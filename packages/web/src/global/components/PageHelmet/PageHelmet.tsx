@@ -8,12 +8,11 @@ export type PageHelmetProps = {
 	keywords?: string;
 }
 
-// TODO: update default values & set Helmet on each page
 const defaultValues: PageHelmetProps = {
-	title: undefined,
-	description: undefined,
+	title: "Leaps 'n' Bounds",
+	description: "Create & manage your goals for the day, week and month.",
 	keywords: undefined,
-	image: undefined,
+	image: "/meta_img.png",
 }
 
 /* Returns array of keywords as a comma separated string */
@@ -42,7 +41,7 @@ export const PageHelmet = React.memo(function PageHelmet(props: PageHelmetProps)
 	return (
 		<Helmet>
 			{/* SEO */}
-			<title>{currentValues.title}</title>
+			<title>{(props.title ? `${props.title} | ` : "") + defaultValues.title}</title>
             <meta name={"description"} content={currentValues.description}/>
 			<meta name={"keywords"} content={currentValues.keywords}/>
 
@@ -50,10 +49,6 @@ export const PageHelmet = React.memo(function PageHelmet(props: PageHelmetProps)
 			<meta property={"og:title"} content={currentValues.title}/>
             <meta property={"og:description"} content={currentValues.image}/>
             <meta property={"og:image"} content={currentValues.description}/>
-			{/* <meta property={"og:site_name"} content={}/> */}
-            {/* <meta property={"twitter:image:alt"} content={imageAlt || defaultMeta.imageAlt}/> */}
-            {/* <meta property={"fb:app_id"} content={}/> */}
-            {/* <meta property={"twitter:site"} content={}/> */}
 		</Helmet>
 	)
 })
