@@ -60,8 +60,7 @@ export class APIFetcher {
 			case DefaultRequestErrorCodes.UnexpectedCondition:
 				return alert("An unexpected error has occurred.  Please refresh this page.")
 			case DefaultRequestErrorCodes.UserMustReAuth:
-				// TODO: replace url to avoid chaining current url on to history
-				return navigate("/Auth");
+				return navigate("/Auth", { replace: true });
 		}
 
 		// if no default errors had to be handled, execute callback

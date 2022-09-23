@@ -12,6 +12,7 @@ import { TFilledFormFields } from '@goal-tracker/shared/src/utils/FormUtils';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '~Store/hooks';
 import { hideLoadingSpinner } from '~Store/slices/PageLoading/PageLoadingSlice';
+import { PageHelmet } from '~FeatureComponents/PageHelmet/PageHelmet';
 
 type AuthProps = {}
 
@@ -32,6 +33,8 @@ export default function Auth(props: AuthProps) {
 
 	return (
 		<div className={styles.auth}>
+			<PageHelmet title={activeForm === "login" ? "Login" : "Register"}/>
+
 			<div className={styles.accentBall} />
 			<div className={styles.darkBall} />
 
@@ -105,8 +108,7 @@ const LoginForm = (props: TFormProps) => {
 		setIsLoading(true);
 
 		APIFetcher.LoginUser(formData).then((res) => APIFetcher.ResponseHandler(res, () => {
-			// TODO: consider replacing url allow back button to go to page previous to auth page
-			navigate("/Dashboard");
+			navigate("/Dashboard", { replace: true });
 		})).catch(({response}: LoginUserRequest.ErrResponse) => {
 			setIsLoading(false);
 
@@ -152,7 +154,7 @@ const RegisterForm = (props: TFormProps) => {
 		setIsLoading(true);
 
 		APIFetcher.RegisterUser(formData).then((res) => APIFetcher.ResponseHandler(res, () => {
-			navigate("/Dashboard");
+			navigate("/Dashboard", { replace: true });
 		})).catch(({ response }: RegisterUserRequest.ErrResponse) => {
 			setIsLoading(false);
 
