@@ -9,7 +9,7 @@ const haveUserReAuth = (res: Response, errMsg?: string) => {
 	return ControllerUtils.respondWithUserReAuthErr(res, errMsg);
 }
 
-/** Middleware for protected API endpoints.  Authenticates user via JWTs stored in cookies */
+/** Middleware for protected API endpoints.  Authenticates user via JWTs sent in request header */
 export const AuthJwt: TRouteController<TAPIRequest<{}, {}, {}>, JWTResLocals> = async (req, res, next) => {
 	try {
 		const authTokens = JWTUtils.getTokensFromHeader(req);
@@ -19,6 +19,7 @@ export const AuthJwt: TRouteController<TAPIRequest<{}, {}, {}>, JWTResLocals> = 
 			return haveUserReAuth(res, "No auth tokens found");
 		}
 	
+		// validate & decode tokens
 		const aToken = JWTUtils.verifyAccessToken(authTokens.aToken);
 		const rToken = JWTUtils.verifyRefreshToken(authTokens.rToken);
 	
@@ -27,7 +28,7 @@ export const AuthJwt: TRouteController<TAPIRequest<{}, {}, {}>, JWTResLocals> = 
 			return haveUserReAuth(res, "Expired refresh token");
 		}
 		
-		// if access token is expired, validate hash id on tokens against token has stored on user's document
+		// if access token is expired, validate jwt id on tokens against jwt IDs stored on user's db document
 		if (aToken.isExpired) {
 			const areTokensRefreshed = await refreshTokens(aToken.jwtHash, rToken.jwtHash, rToken.userId, res);
 			
@@ -35,11 +36,11 @@ export const AuthJwt: TRouteController<TAPIRequest<{}, {}, {}>, JWTResLocals> = 
 				return haveUserReAuth(res, "Unable to refresh tokens");
 			}
 		} else {
-			// else make sure authorization header is not included in resonse
+			// if token doesn't need to be refreshed, ensure no cached token is being sent in response header
 			res.setHeader("authorization", "");
 		}
 	
-		// make user's id accessible to other controllers
+		// make user's id accessible to other controllers & middleware
 		res.locals = { userId: aToken.userId }
 
 		next();
@@ -56,19 +57,23 @@ const refreshTokens = async (aTokenHash: string, rTokenHash: string, userId: str
 	try {
 		const user = await db.User.findById(userId);
 
+		// verify jwt id stored on tokens is a valid id stored on user's db document
 		const isRefreshAllowed = user && (aTokenHash === rTokenHash) && user.jwtHash?.[rTokenHash];
 	
 		if (!isRefreshAllowed) {
 			return false;
 		}
 
+		// generate and store tokens in reponse header
 		const { tokenHashId, tokens: newTokens } = await JWTUtils.generateAndSetTokens(userId, res);
 
 		if (!newTokens) {
 			return false;
 		}
 	
+		// remove old jwt id from user doc
 		await user.removeJWTHash(rTokenHash);
+		// add enw jwt id to user doc
 		await user.addJWTHash(tokenHashId);
 
 		return true;

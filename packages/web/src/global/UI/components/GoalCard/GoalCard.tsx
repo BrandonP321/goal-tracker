@@ -22,6 +22,7 @@ export const GoalCard = (props: GoalCardProps) => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 
+	/** Valid categories goal can be moved to */
 	const [moveDropdownOptions, setMoveDropdownOptions] = useState<DropdownMenuProps["options"]>([]);
 	const [showMoveDropdown, setShowMoveDropdown] = useState(false);
 
@@ -125,6 +126,7 @@ type GoalCardIconTooltipProps = {
 	children: React.ReactNode;
 }
 
+/** Tooltip to be displayed above each icon on hover */
 const GoalCardIconTooltip = (props: GoalCardIconTooltipProps) => {
 	return (
 		<div className={styles.iconHelper}>

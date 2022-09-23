@@ -41,6 +41,7 @@ export const RegisterUserController: TRouteController<RegisterUserRequest.TReque
 			return ControllerUtils.respondWithUnexpectedErr(res, "Unable to create new user");
 		}
 
+		// generate auth tokens and set them in response header
 		const { tokens } = await JWTUtils.generateAndSetTokens(user.id, res, newTokenHash);
 
 		if (!tokens) {
@@ -71,12 +72,14 @@ export const LoginUserController: TRouteController<LoginUserRequest.TRequest, {}
 			return ControllerUtils.respondWithErr(ReqUserLoginErrors.IncorrectEmailOrPassword({}), res);
 		}
 
+		// generate and set auth tokens in response header
 		const { tokenHashId, tokens } = await JWTUtils.generateAndSetTokens(user.id, res);
 
 		if (!tokens) {
 			return ControllerUtils.respondWithUnexpectedErr(res, "Unable to generate auth tokens to login")
 		}
 
+		// add jwt id to user's doc in db
 		await user.addJWTHash(tokenHashId);
 
 		const userJSON = await user.toShallowJSON();

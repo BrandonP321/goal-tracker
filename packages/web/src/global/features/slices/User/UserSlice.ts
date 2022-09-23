@@ -10,10 +10,12 @@ const initialState: UserState = {
   username: null,
 }
 
+/** Returns basic user data to be displayed across site */
 const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
+      /** Updates user data in store */
       setUser: (state, action: PayloadAction<UserState>) => {
 			  state.id = action.payload.id;
         state.username = action.payload.username

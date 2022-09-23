@@ -11,7 +11,7 @@ export type TUserDocLocals = JWTResLocals & {
 }
 
 /**
- * Finds user document and saves it as a response local variable.  MUST be preceded 
+ * Finds user document and saves it as a local variable on the response.  MUST be preceded 
  * by AuthJWT() middleware, which gets the user's id from auth tokens
  */
 export const GetUserMiddleware: TRouteController<TAPIRequest<{}, {}, {}>, TUserDocLocals> = async (req, res, next) => {

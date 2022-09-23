@@ -26,6 +26,7 @@ export const GoalCreationModal = (props: GoalCreationModalProps) => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 
+	/** Field input validation errors */
 	const [validationErrors, setValidationErrors] = useFormValidationErrors<TGoalCreationFieldId>();
 	const [isLoading, setIsLoading] = useState(false);
 

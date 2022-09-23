@@ -12,9 +12,11 @@ type TDocSaveErr = Error & {
 
 const DuplicateUniqueKeyErrCode = 11000;
 
+/** Attempts to handle any errors that occurr while saving a User document */
 export const handleUserDocSaveErr = async function(err: TDocSaveErr, doc: UserModel.Document, next: (err: any) => void) {
 	const errObj: TUserDocSaveErr = { reason: undefined };
 
+	// if a unique field has a duplicate key, report error
 	if (err.code === DuplicateUniqueKeyErrCode && err.keyPattern) {
 		try {
 			errObj.reason = "emailOrUsernameTaken";

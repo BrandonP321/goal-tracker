@@ -9,7 +9,7 @@ type LoadingWrapperProps = {}
 
 /**
  * Loading Spinner that covers entire page, locking scroll when visible.  
- * Relies on status of 'pageLoading' redux state to toggle visibility
+ * Relies on status of 'pageLoading' redux slice to toggle visibility
  */
 export default function LoadingWrapper(props: LoadingWrapperProps) {
 	const isLoading = usePageLoading();

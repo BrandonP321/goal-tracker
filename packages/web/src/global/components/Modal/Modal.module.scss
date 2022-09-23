@@ -17,10 +17,6 @@
 	&.show {
 		pointer-events: all;
 		opacity: 1;
-
-		.overlay {
-
-		}
 	}
 
 	> *:not(:first-child) {

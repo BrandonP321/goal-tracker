@@ -18,10 +18,11 @@ type AuthProps = {}
 export default function Auth(props: AuthProps) {
 	const dispatch = useAppDispatch();
 
+	/** Dictates whether login or register form should be displayed */
 	const [activeForm, setActiveForm] = useState<"login" | "register">("login");
 
 	useEffect(() => {
-		// should always make sure loading spinner is hidden when auth page is loaded in case user is being redirected after re-auth failure
+		// Always make sure loading spinner is hidden when auth page is loaded in case user is being redirected after re-auth failure
 		dispatch(hideLoadingSpinner());
 	}, [])
 
@@ -59,15 +60,20 @@ const AuthForm = (props: AuthFormProps) => {
 		fields, title, changeFormText, changeFormLinkText, switchForm, isLoading, ...rest
 	} = props;
 
+	/** Field input validation errors */
 	const [validationErrors, setValidationErrors] = useFormValidationErrors();
 
 	return (
 		<Form {...rest} setValidationErrors={setValidationErrors} classes={{ root: styles.formWrapper }}>
 			<h1 className={styles.title}>{title}</h1>
+
+			{/* Procedurally generated form fields */}
 			<FormFields fields={fields} errors={validationErrors.fieldErrors}/>
+
 			{validationErrors.formError &&
 				<p className={styles.formError}>{validationErrors.formError}</p>
 			}
+
 			<GradientBtn isLoading={isLoading}>{title}</GradientBtn>
 			<p className={styles.changeFormText}>{changeFormText} <strong onClick={switchForm}>{changeFormLinkText}</strong></p>
 		</Form>
@@ -93,14 +99,13 @@ type TFormProps = {
 const LoginForm = (props: TFormProps) => {
 	const navigate = useNavigate();
 
-	/** Disables "log in" button if true */
 	const [isLoading, setIsLoading] = useState(false);
 
 	const handleSubmit: FormSubmissionHandler<TLoginFieldId> = (formData, setErrors) => {
 		setIsLoading(true);
 
 		APIFetcher.LoginUser(formData).then((res) => APIFetcher.ResponseHandler(res, () => {
-			console.log(res);
+			// TODO: consider replacing url allow back button to go to page previous to auth page
 			navigate("/Dashboard");
 		})).catch(({response}: LoginUserRequest.ErrResponse) => {
 			setIsLoading(false);
@@ -141,7 +146,6 @@ const LoginForm = (props: TFormProps) => {
 const RegisterForm = (props: TFormProps) => {
 	const navigate = useNavigate();
 
-	/** Disables "log in" button if true */
 	const [isLoading, setIsLoading] = useState(false);
 
 	const handleSubmit: FormSubmissionHandler<TRegistrationFieldId> = (formData, setErrors) => {

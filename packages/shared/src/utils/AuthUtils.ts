@@ -6,6 +6,7 @@ export type TRegistrationFieldId = "username" | "email" | "password" | "password
 export type TLoginFieldId = "email" | "password";
 
 export class AuthUtils {
+	/** Fields that must be provided when creating a new account */
 	public static RegistrationFields: TFormField<TRegistrationFieldId>[] = [
 		{ fieldId: "username", required: true, tests: [{ test: (v, fields) => RegexUtils.usernameRegex.test(v), errMsg: Loc.Auth.UsernameRegexErr }] },
 		{ fieldId: "email", required: true, tests: [{ test: (v, fields) => RegexUtils.emailRegex.test(v), errMsg: Loc.Auth.EmailRegexErr }] },
@@ -13,6 +14,7 @@ export class AuthUtils {
 		{ fieldId: "passwordReEnter", required: true, tests: [{ test: (v, fields) => (v === fields.password ?? "" === v), errMsg: Loc.Auth.PasswordsDoNotMatch }] },
 	]
 
+	/** Fields that must be present when loggin in */
 	public static LoginFields: TFormField<TLoginFieldId>[] = [
 		{ fieldId: "email", required: true, tests: [] },
 		{ fieldId: "password", required: true, tests: [] },

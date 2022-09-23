@@ -13,6 +13,7 @@ const initialState: UserGoalsState = {
   haveGoalsLoaded: false,
 }
 
+/** Returns user's goals & boolean for whether any errors occurred retrieving or updating a goal */
 const userGoalsSlice = createSlice({
     name: "userGoals",
     initialState,
@@ -46,10 +47,12 @@ const userGoalsSlice = createSlice({
           state.goals[category][goalIndex] = action.payload;
         }
       },
+      /** Moves a goal to a new category */
       moveGoal: (state, action: PayloadAction<{goalId: string; currentCategory: TGoalCategory; newCategory: TGoalCategory}>) => {
         const listForRemoval = state.goals?.[action.payload.currentCategory];
         const listForAddition = state.goals?.[action.payload.newCategory];
 
+        /** goals index within it's current category array */
         const goalIndex = listForRemoval?.findIndex((goal) => goal.id === action.payload.goalId);
 
         if (goalIndex === undefined || goalIndex === -1) {
@@ -61,7 +64,9 @@ const userGoalsSlice = createSlice({
           if (goal) {
             goal.category = action.payload.newCategory;
 
+            // remove goal from it's current category array
             listForRemoval?.splice(goalIndex, 1);
+            // add goal to top of new category
             listForAddition?.unshift(goal);
           }
         }

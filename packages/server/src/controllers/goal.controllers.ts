@@ -24,6 +24,7 @@ export const CreateGoalController: TRouteController<CreateGoalRequest.TRequest, 
 		title: req.body.title
 	}
 
+	// add new goal to user's list of goals
 	const isGoalAdded = !!(await user.addGoal(newGoal));
 
 	if (!isGoalAdded) {
@@ -40,6 +41,7 @@ export const GetUserGoalsController: TRouteController<GetUserGoalsRequest.TReque
 export const UpdateGoalController: TRouteController<UpdateGoalRequest.TRequest, TUserDocLocals> = async (req, res) => {
 	const { goalId, goalCategory, ...rest } = req.body;
 
+	// verify goal id & category where specified in request
 	if (!goalId || !goalCategory) {
 		return ControllerUtils.respondWithErr(UpdateGoalErrors.MissingGoalIdOrCategory({}), res);
 	}
@@ -50,6 +52,7 @@ export const UpdateGoalController: TRouteController<UpdateGoalRequest.TRequest, 
 		return ControllerUtils.respondWithErr(UpdateGoalErrors.InvalidFieldInput({ invalidFields: inputValidationErrors }), res);
 	}
 
+	// update goal in user's db document
 	const { foundGoal, updatedGoal } = await res.locals.user.updateGoal(goalId, goalCategory, req.body);
 
 	if (!foundGoal) {
@@ -67,10 +70,12 @@ export const DeleteGoalController: TRouteController<DeleteGoalRequest.TRequest, 
 	const goalId = decodeURIComponent(goalIdURI);
 	const goalCategory = decodeURIComponent(goalCategoryURI) as TGoalCategory;
 
+	// verify goal id & category were specified in request
 	if (!goalId || !goalCategory || !(GoalCategories.includes(goalCategory))) {
 		return ControllerUtils.respondWithErr(DeleteGoalErrors.MissingGoalIdOrCategory({}), res);
 	}
 
+	// remove goal from user's db document
 	const isGoalRemoved = await res.locals.user.removeGoal(goalId, goalCategory);
 
 	if (!isGoalRemoved) {

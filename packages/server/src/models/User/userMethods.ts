@@ -3,6 +3,7 @@ import { UpdateGoalRequest } from "@goal-tracker/shared/src/api/Requests/Goal/Go
 import { TGoal, TGoalCategory } from "@goal-tracker/shared/src/utils/GoalUtils";
 import bcrypt from "bcrypt";
 
+/** See {@link UserModel.InstanceMethods.toFullJSON} */
 const toFullJSON: UserModel.InstanceMethods["toFullJSON"] = async function(this: UserModel.Document) {
 	// flatten user JSON and remove sensitive fields
 	const userJSON = this.toJSON();
@@ -11,17 +12,19 @@ const toFullJSON: UserModel.InstanceMethods["toFullJSON"] = async function(this:
 	return removeSensitiveData(userJSON);
 }
 
-
+/** See {@link UserModel.InstanceMethods.toShallowJSON} */
 const toShallowJSON: UserModel.InstanceMethods["toShallowJSON"] = async function(this: UserModel.Document) {
 	return {
 		email: this.email, id: this.id, username: this.username
 	}
 }
 
+/** See {@link UserModel.InstanceMethods.validatePassword} */
 const validatePassword: UserModel.InstanceMethods["validatePassword"] = async function(this: UserModel.Document, password: string) {
 	return bcrypt.compare(password, this.password);
 }
 
+/** Removes sensitive data from user JSON */
 const removeSensitiveData = function(user: UserModel.User): UserModel.WithoutSensitiveData<UserModel.User> {
 	// properties that need to be removed from user JSON
 	const sensitiveFields: {[key in UserModel.SensitiveFields]: true} = {
@@ -39,11 +42,13 @@ const removeSensitiveData = function(user: UserModel.User): UserModel.WithoutSen
 	return strippedUser as UserModel.WithoutSensitiveData<UserModel.User>;
 }
 
+/** See {@link UserModel.InstanceMethods.addJWTHash} */
 const addJWTHash: UserModel.InstanceMethods["addJWTHash"] = async function(this: UserModel.Document, hash) {
 	this.jwtHash = {...(this.jwtHash ?? {}), [hash]: true}
 	await this.save();
 }
 
+/** See {@link UserModel.InstanceMethods.removeJWTHash} */
 const removeJWTHash: UserModel.InstanceMethods["removeJWTHash"] = async function(this: UserModel.Document, hash) {
 	const newJwtHashObj = {...this.jwtHash};
 	delete newJwtHashObj[hash];
@@ -52,8 +57,10 @@ const removeJWTHash: UserModel.InstanceMethods["removeJWTHash"] = async function
 	await this.save();
 }
 
+/** See {@link UserModel.InstanceMethods.addGoal} */
 const addGoal: UserModel.InstanceMethods["addGoal"] = async function(this: UserModel.Document, goal: TGoal) {
 	try {
+		// TODO: just push new goal to goal list and mark "goals" as modified
 		this.goals = {
 			...(this.goals ?? {}),
 			[goal.category]: [
@@ -69,9 +76,10 @@ const addGoal: UserModel.InstanceMethods["addGoal"] = async function(this: UserM
 	}
 }
 
+/** See {@link UserModel.InstanceMethods.removeGoal} */
 const removeGoal: UserModel.InstanceMethods["removeGoal"] = async function(this: UserModel.Document, goalId: string, goalCategory: TGoalCategory) {
 	try {
-		const goalIndex = this.goals?.[goalCategory]?.findIndex(g => g.id === goalId);
+		const goalIndex = this.goals?.[goalCategory]?.findIndex(g => g.id === goalId) ?? -1;
 	
 		if (goalIndex === -1) {
 			return false;
@@ -88,6 +96,7 @@ const removeGoal: UserModel.InstanceMethods["removeGoal"] = async function(this:
 	}
 }
 
+/** See {@link UserModel.InstanceMethods.updateGoal} */
 const updateGoal: UserModel.InstanceMethods["updateGoal"] = async function(this: UserModel.Document, goalId: string, category: TGoalCategory, updates: UpdateGoalRequest.TReqBody) {
 	const goalIndex = this.goals?.[category]?.findIndex(g => g.id === goalId);
 
@@ -97,6 +106,7 @@ const updateGoal: UserModel.InstanceMethods["updateGoal"] = async function(this:
 
 	const goal = this.goals[category][goalIndex];
 	
+	// new category to move goal to if provided in updates obj
 	const newCategory = updates.category;
 	const isChangingCategories = !!newCategory && (goal.category !== updates.category)	
 	
@@ -120,7 +130,6 @@ const updateGoal: UserModel.InstanceMethods["updateGoal"] = async function(this:
 		this.goals[newCategory]?.unshift(modifiedGoal);
 	}
 
-	// notify mongoose that this user's goals have been updated
 	this.markModified("goals");
 	
 	await this.save()

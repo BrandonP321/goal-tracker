@@ -1,5 +1,6 @@
 export class ENVUtils {
 	
+	/** Environment variables with a default of an empty string */
 	public static Vars = {
 		SECRET: process.env.SECRET ?? "",
 		ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET ?? "",

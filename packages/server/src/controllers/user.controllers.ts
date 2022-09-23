@@ -6,6 +6,7 @@ import { ControllerUtils } from "~Utils/ControllerUtils";
 import db from "~Models";
 import { TUserDocLocals } from "~Middleware/GetUser.middleware";
 
+/** Returns full user JSON without sensitive data */
 export const GetFullUserController: TRouteController<GetFullUserRequest.TRequest, TUserDocLocals> = async (req, res) => {
 	return res.json(await res.locals.user.toFullJSON()).end();
 }

@@ -18,15 +18,14 @@ const initialState: ResponsiveState = {
 	pico: false
 }
 
-/* data passed into reducer when media query event fires */
+/* data passed into reducers when media query event fires */
 type ResponsiveBreakpointUpdate = {
 	breakpoint: keyof ResponsiveState;
 	matches: boolean;
 }
 
 /**
- * responsiveSlice tracks which css breakpoints apply to the user's viewport 
- * width at any given point in time
+ * Returns object of key/value (breakpoint/status) for each CSS breakpoint, allowing for responsive logic within JS
  */
 const responsiveSlice = createSlice({
     name: "responsive",

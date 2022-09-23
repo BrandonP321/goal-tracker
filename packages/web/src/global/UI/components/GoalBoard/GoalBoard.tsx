@@ -18,9 +18,11 @@ type GoalBoardProps = {
 
 }
 
+/* 'wait' status of throttle function for mouse drag on board */
 let throttleWait = false;
 const setThrottleWait = (value: boolean) => throttleWait = value;
 
+/** Board with lists for each goal category */
 export const GoalBoard = (props: GoalBoardProps) => {
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
@@ -28,17 +30,8 @@ export const GoalBoard = (props: GoalBoardProps) => {
 
 	const { errorUpdatingGoal, goals, haveGoalsLoaded } = useUserGoals();
 
-	const [updateModalData, setUpdateModalData] = useState<null | TGoal>(null);
-	const [showUpdateModalState, setShowUpdateModalState] = useState(false);
-
-	const showUpdateModal = (goal: TGoal) => {
-		setUpdateModalData(goal);
-		setShowUpdateModalState(true);
-	}
-
-	const hideUpdateModal = (e?: React.MouseEvent<HTMLButtonElement>) => {
-		setShowUpdateModalState(false);
-	}
+	const [goalUpdateModalData, setGoalUpdateModalData] = useState<null | TGoal>(null);
+	const [showGoalUpdateModalState, setShowGoalUpdateModalState] = useState(false);
 
 	const isMouseDownRef = useRef(false);
 	const lastMousePos = useRef<number | null>(null);
@@ -58,6 +51,16 @@ export const GoalBoard = (props: GoalBoardProps) => {
 		}))})
 	}, [])
 
+	const showGoalUpdateModal = (goal: TGoal) => {
+		setGoalUpdateModalData(goal);
+		setShowGoalUpdateModalState(true);
+	}
+
+	const hideGoalUpdateModal = (e?: React.MouseEvent<HTMLButtonElement>) => {
+		setShowGoalUpdateModalState(false);
+	}
+
+	/** Scrolls board on mouse click & drag */
 	const handleMouseDrag: React.MouseEventHandler<HTMLDivElement> = (e) => {
 		if (!isMouseDownRef.current || lastMousePos.current === null || !boardRef.current) {
 			return;
@@ -73,6 +76,7 @@ export const GoalBoard = (props: GoalBoardProps) => {
 		lastMousePos.current = mouseX;
 	}
 
+	/** Unallows scrolling of board via mouse drag */
 	const resetDragSettings = () => {
 		requestAnimationFrame(() => {
 			isMouseDownRef.current = false
@@ -105,9 +109,9 @@ export const GoalBoard = (props: GoalBoardProps) => {
 			onMouseMove={!mobile ? ((e) => throttle(() => handleMouseDrag(e), 1000 / 90, throttleWait, setThrottleWait)) : undefined}
 		>
 			{goalLists?.map((g, i) => (
-				<GoalList key={i} goals={g.goals} title={g.title} showGoalUpdateModal={showUpdateModal} preventMouseScroll={resetDragSettings} category={g.category} />
+				<GoalList key={i} goals={g.goals} title={g.title} showGoalUpdateModal={showGoalUpdateModal} preventMouseScroll={resetDragSettings} category={g.category} />
 			))}
-			<GoalUpdateModal goalData={updateModalData} show={showUpdateModalState} hide={hideUpdateModal} classes={{}} onMouseDown={resetDragSettings}/>
+			<GoalUpdateModal goalData={goalUpdateModalData} show={showGoalUpdateModalState} hide={hideGoalUpdateModal} classes={{}} onMouseDown={resetDragSettings}/>
 		</div>
 	)
 }

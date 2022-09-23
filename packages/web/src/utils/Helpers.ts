@@ -4,9 +4,9 @@ export type ClassesProp<T extends string> = {
 }
 
 /**
- * Throttles rate at which a callback function can be called
+ * Throttles rate at which a callback function can be executed
  * @param cb Callback function
- * @param interval How often callback can be called
+ * @param interval How often callback can be executed
  * @param wait if false, callback can't be executed yet
  * @param setWait updates 'wait' value
  */

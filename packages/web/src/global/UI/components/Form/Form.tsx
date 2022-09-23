@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import { ClassesProp } from "~Utils/Helpers";
 import styles from "./Form.module.scss";
 
+/** Type of function to be invoked when form is submitted */
 export type FormSubmissionHandler<T extends string = string> = (
 	formData: TFilledFormFields<T>,
 	setErrors: (errors: { fieldErrors: TFormFieldErrors<T>, formError?: string}
 ) => void) => void;
 
+/** Returns annotated state for form validation errors */
 export const useFormValidationErrors = <T extends string>() => {
 	return useState<{ fieldErrors: TFormFieldErrors<T>, formError?: string }>({ fieldErrors: {} });
 }
@@ -22,6 +24,7 @@ export type FormProps = {
 	inputRef?: React.MutableRefObject<HTMLFormElement | null>;
 }
 
+/** Form element that handles field input validation before allowing form to be submitted */
 export const Form = (props: FormProps) => {
 	const {
 		onSubmit, validateFields, setValidationErrors, children, classes, inputRef
@@ -29,15 +32,18 @@ export const Form = (props: FormProps) => {
 
 	const handleFormSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
 		e.preventDefault();
+
 		// remove all currently displayed errors
 		setValidationErrors({ fieldErrors: {} });
 
 		const formData = FormUtils.getFormData(e.currentTarget);
 
+		// check for any input validation errors
 		const fieldErrors = validateFields(formData);
 
 		setValidationErrors({ fieldErrors });
 
+		// submit form if no validation errors were caught
 		if (Object.keys(fieldErrors).length === 0) {
 			// if no validation errors were found, submit data
 			onSubmit && onSubmit(formData, setValidationErrors);
@@ -56,6 +62,7 @@ type FormFieldsProps = {
 	errors: TFormFieldErrors<string>;
 }
 
+/** Procedurally renders different input, textarea, etc. elements based on an array of field objects  */
 export const FormFields = (props: FormFieldsProps) => {
 	const { fields, errors } = props;
 
@@ -74,6 +81,7 @@ export const FormFields = (props: FormFieldsProps) => {
 
 type TFormFieldTypes = "Input" | "Textarea" | "Radio"
 
+/** Basic field properties that every input type should contain */
 type FormField<T extends TFormFieldTypes, TValidFieldId extends string = string> = {
 	type: T;
 	id: TValidFieldId;
@@ -93,6 +101,7 @@ export type FormTextInputFieldProps<TValidFieldId extends string = string> = For
 	classes?: ClassesProp<"root" | "fieldWrapper" | "input" | "placeholder" | "errMsg">;
 }
 
+/** <input> element */
 export const FormTextInputField = (props: FormTextInputFieldProps) => {
 	const {
 		id, classes, inputType, type, autoComplete, placeholder, errMsg, formRef, defaultValue, ...rest
@@ -131,6 +140,7 @@ export type FormTextareaProps<TValidFieldId extends string = string> = FormField
 	classes?: ClassesProp<"root" | "fieldWrapper" | "textarea" | "placeholder" | "errMsg">
 }
 
+/** <textarea> element */
 export const FormTextareaField = (props: FormTextareaProps) => {
 	const {
 		id, classes, type, placeholder, errMsg, formRef, defaultValue, ...rest
@@ -171,6 +181,7 @@ type FormFieldWrapperProps = {
 	isFocused: boolean;
 }
 
+/** input wrapper for handling UI around input element */
 const FormFieldWrapper = ({ placeholder, children, classes, inputHasValue, inputId, errMsg, isFocused }: FormFieldWrapperProps) => {
 
 	return (
@@ -190,6 +201,7 @@ type RadioFormFieldProps<TValidFieldId extends string = string> = FormField<"Rad
 	options: { title: string; id: string; value: string }[];
 }
 
+/** radio input element */
 const RadioFormField = (props: RadioFormFieldProps) => {
 	const { id, name, options, type, errMsg, title, defaultValue, formRef } = props;
 

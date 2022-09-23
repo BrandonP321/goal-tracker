@@ -8,7 +8,7 @@ export type PageHelmetProps = {
 	keywords?: string;
 }
 
-// TODO: update default values
+// TODO: update default values & set Helmet on each page
 const defaultValues: PageHelmetProps = {
 	title: undefined,
 	description: undefined,
@@ -24,7 +24,7 @@ export const joinKeywordsArray = (keywords: (string | undefined)[]) => {
 export type PageHelmetPropsWithoutDefaults = Omit<PageHelmetProps, "defaultValues">;
 
 /**
- * Page helmet for setting data that exists in the document's <head>
+ * Page helmet for setting page meta data
  */
 export const PageHelmet = React.memo(function PageHelmet(props: PageHelmetProps) {
 	const {

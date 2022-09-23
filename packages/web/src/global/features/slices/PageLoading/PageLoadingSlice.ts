@@ -10,7 +10,7 @@ const initialState: PageLoadingState = {
 }
 
 /**
- * Contains the status of the loading screen wrapper
+ * Contains the loading status of the site and/or page
  */
 const pageLoadingSlice = createSlice({
     name: "pageLoading",

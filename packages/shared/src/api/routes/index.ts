@@ -2,7 +2,7 @@ import { AuthRoutes } from "./auth.routes";
 import { GoalRoutes } from "./goal.routes";
 import { UserRoutes } from "./user.routes";
 
-/** Utility type that returns type of params object parameter used in functions for getting API endpoints */
+/** Constructs type of object that is passed in to a route function that return an API endopint url */
 export type TRouteUrlParams<TRequiredVars extends string = "", TOptionalVars extends string = ""> = 
 	("" extends TRequiredVars ? {} : {[key in TRequiredVars]: string}) & 
 	("" extends TOptionalVars ? {} : {[key in TOptionalVars]?: string});

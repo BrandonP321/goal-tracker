@@ -27,6 +27,7 @@ export const GoalUpdateModal = (props: GoalUpdateModalProps) => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 
+	/** Field input validation errors */
 	const [validationErrors, setValidationErrors] = useFormValidationErrors<TGoalUpdateFieldId>();
 	const [isLoading, setIsLoading] = useState(false);
 

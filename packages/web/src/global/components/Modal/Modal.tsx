@@ -13,6 +13,7 @@ export type ModalProps = {
 	onMouseDown?: () => void;
 }
 
+/** Displays a pop-up modal and locks window scroll */
 export default function Modal(props: ModalProps) {
 	const { show, children, classes, hide, onMouseDown } = props;
 

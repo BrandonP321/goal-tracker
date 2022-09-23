@@ -14,6 +14,7 @@ type GradientBtnProps = {
 	type?: React.ButtonHTMLAttributes<HTMLButtonElement>["type"];
 }
 
+/** Button with gradient background */
 export const GradientBtn = (props: GradientBtnProps) => {
 	const { children, classes, onClick, isLoading, disabled, type } = props;
 

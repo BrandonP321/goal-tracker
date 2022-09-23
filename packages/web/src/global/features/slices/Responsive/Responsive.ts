@@ -25,8 +25,7 @@ class MediaQuery {
 };
 
 /**
- * Handles logic for keeping track of media query breakpoints and updating redux store 
- * to reflect which breakpoints are true
+ * Utility class for logic around updating Responsive slice in redux store
  */
 export class Responsive {
 	/* redux store instanced passed in to constructor */
@@ -42,7 +41,7 @@ export class Responsive {
 		pico: new MediaQuery(350),
 	}
 
-	/* getters to quickly return a boolean value of whether the media query is valid */
+	/* Getters for retrieving status of each media query */
 	public static get max() { return this.queries.max.testQuery() };
 	public static get large() { return this.queries.large.testQuery() };
 	public static get medium() { return this.queries.medium.testQuery() };
@@ -50,9 +49,9 @@ export class Responsive {
 	public static get tiny() { return this.queries.tiny.testQuery() };
 	public static get pcio() { return this.queries.pico.testQuery() };
 
-	/* Adds resize event listener to window to check media query responsiveness */
+	/* Adds resize event listener to window for checking queries on window resize */
 	private static addMediaQueryListeners = () => {
-		// make initial check on all queries
+		// perform initial check on all queries
 		this.checkMediaQueries();
 
 		window.addEventListener("resize", this.checkMediaQueries)
@@ -75,7 +74,7 @@ export class Responsive {
 		}
 	}
 
-	/* Dispatches new media query match boolean value to redux state */
+	/* Dispatches new media query status to redux store */
 	private static handleMediaQueryChange = ({ breakpoint, matches }: { breakpoint: keyof ResponsiveState, matches: boolean }) => {
 		this.store.dispatch(breakpointHit({ breakpoint, matches }))
 	}

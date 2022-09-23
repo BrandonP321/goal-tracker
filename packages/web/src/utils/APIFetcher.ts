@@ -60,6 +60,7 @@ export class APIFetcher {
 			case DefaultRequestErrorCodes.UnexpectedCondition:
 				return alert("An unexpected error has occurred.  Please refresh this page.")
 			case DefaultRequestErrorCodes.UserMustReAuth:
+				// TODO: replace url to avoid chaining current url on to history
 				return navigate("/Auth");
 		}
 
@@ -76,6 +77,10 @@ export class APIFetcher {
 		}
 	}
 
+	/**
+	 * If auth tokens were sent in response, stores tokens in local storage.  While this solution is not good in terms of security, it
+	 * is the current working fix after running into the issue of Safari not supporting cross-site tracking of cookies.
+	 */
 	public static ResponseHandler = (res: AxiosResponse, cb?: () => void) => {
 		const tokens = res.headers.authorization;
 

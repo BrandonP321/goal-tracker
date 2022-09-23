@@ -16,6 +16,10 @@ type TAuthTokens = {
 // const authTokenCookieName = "authTokens";
 const authTokenHeaderName = "Authorization";
 
+/**
+ * JWT utility class with commented out methods that were used when JWTs were stored in http cookies.  Am leaving this code commented out to serve
+ * as a representation of how JWTs should be implemented if the server and website were on the same domain and cross-site cookies could be used.
+ */
 export class JWTUtils {
 	/** Returns random hash */
 	public static generateHash = async () => {
@@ -73,7 +77,7 @@ export class JWTUtils {
 	// 	});
 	// }
 
-	/** Returns access & refresh tokens */
+	/** Returns new access & refresh tokens */
 	public static generateTokens = (userId: string, tokenHashId: string) => {
 		try {
 			const aToken = this.getSignedAccessToken(userId, tokenHashId);
@@ -119,6 +123,12 @@ export class JWTUtils {
 		return this.verifyToken(token, ENVUtils.Vars.REFRESH_TOKEN_SECRET);
 	}
 
+	/**
+	 * Verifies & decodes JWT
+	 * @param token JWT
+	 * @param secret Secret hash used to verify token
+	 * @returns Decoded JWT with it's expiration status
+	 */
 	public static verifyToken = (token: string, secret: string) => {
 		const decodedToken = jwt.decode(token);
 

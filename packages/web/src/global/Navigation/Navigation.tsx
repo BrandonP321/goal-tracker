@@ -17,7 +17,7 @@ export default React.memo(function Navigation() {
 	)
 })
 
-/** Fallback component that shows loading spinner on mount and hides on unmount */
+/** Fallback component that displays loading spinner on mount and hides on unmount */
 const FallbackComponent = () => {
 	const dispatch = useAppDispatch();
 

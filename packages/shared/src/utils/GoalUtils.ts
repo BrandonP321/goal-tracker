@@ -23,12 +23,14 @@ export class GoalUtils {
 		week: "Week"
 	}
 
+	/** Fields that must be provided by user when creating a new goal */
 	public static GoalCreationFields: TFormField<TGoalCreationFieldId>[] = [
 		{ fieldId: "title", required: true, tests: [] },
 		{ fieldId: "notes", required: false, tests: [] },
 		{ fieldId: "category", required: true, tests: [{ test: (v, fields) => RegexUtils.goalCategoryRegex.test(v), errMsg: Loc.Goals.InvalidCategory }] }
 	]
 
+	/** Fields that must be provided by user when updating a goal */
 	public static GoalUpdateFields: TFormField<TGoalUpdateFieldId>[] = [
 		{ fieldId: "title", required: false, tests: [] },
 		{ fieldId: "notes", required: false, tests: [] },
@@ -44,6 +46,7 @@ export class GoalUtils {
 		return FormUtils.ValidateFormFields(fields, this.GoalUpdateFields);
 	}
 
+	/** Returns array of categories a goal can be moved to, excluding it's current category */
 	public static getValidCategoriesForMove = (currentCategory: TGoalCategory) => {
 		const allCategories: TGoalCategory[] = ["today", "week", "month", "unassigned"];
 
